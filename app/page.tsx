@@ -1,101 +1,92 @@
-import Image from "next/image";
+"use client"
 
-export default function Home() {
+import Image from "next/image"
+import Link from "next/link"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { useAuth } from "@/contexts/auth-context"
+import ProtectedRoute from "@/components/auth/protected-route"
+import { motion } from "framer-motion"
+
+export default function HomePage() {
+  const { user } = useAuth()
+
+  const toolsData = [
+    {
+      title: "Wheel Of Life",
+      description:
+        "Improve your life today using our unique Wheel Of Life tool. Find out which areas you need to improve and set your SMART goals on how to achieve it.",
+      image: "/placeholder.svg?height=400&width=400",
+      link: "/wheel-of-life",
+    },
+    {
+      title: "Productivity Planner",
+      description:
+        "Increase your productivity using our custom Productivity Planner. Break down your week and see where you can improve to achieve your goals.",
+      image: "/placeholder.svg?height=400&width=400",
+      link: "/planner",
+    },
+  ]
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    <ProtectedRoute>
+      <div className="container mx-auto px-4 py-12 flex-grow">
+        <motion.h1
+          className="text-4xl font-bold text-center mb-8 text-gray-800"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          Welcome to Tryumph Tools
+        </motion.h1>
+        <motion.p
+          className="text-center text-gray-600 mb-12 max-w-2xl mx-auto"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+        >
+          Empower your personal growth journey with our suite of tools designed to help you achieve your goals and live
+          your best life.
+        </motion.p>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+        <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+          {toolsData.map((tool, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: index * 0.2 + 0.4 }}
+            >
+              <Card className="overflow-hidden transition-shadow hover:shadow-lg h-full flex flex-col">
+                <CardHeader className="p-0">
+                  <div className="relative h-48 md:h-64">
+                    <Image
+                      src={tool.image || "/placeholder.svg"}
+                      alt={`${tool.title} Tool`}
+                      layout="fill"
+                      objectFit="cover"
+                      className="transition-transform hover:scale-105"
+                    />
+                  </div>
+                </CardHeader>
+                <CardContent className="p-6 flex flex-col flex-grow">
+                  <CardTitle className="text-2xl text-center mb-4 text-purple-600">{tool.title}</CardTitle>
+                  <p className="text-center text-gray-600 mb-6 flex-grow">{tool.description}</p>
+                  <Link href={tool.link} className="mt-auto">
+                    <Button
+                      variant="outline"
+                      className="w-full text-purple-600 border-purple-600 hover:bg-purple-50 transition-colors"
+                    >
+                      Explore {tool.title}
+                    </Button>
+                  </Link>
+                </CardContent>
+              </Card>
+            </motion.div>
+          ))}
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
+      </div>
+    </ProtectedRoute>
+  )
 }
+
