@@ -279,12 +279,14 @@ export function WeeklySchedule({
       <div className="overflow-x-auto">
         <div className="inline-block min-w-full align-middle">
           <div className="overflow-hidden border rounded-lg">
-            <Table>
+          <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="w-20">Time</TableHead>
+                  <TableHead className="w-20 text-center">Time</TableHead>
                   {days.map((day) => (
-                    <TableHead key={day}>{day}</TableHead>
+                    <TableHead className="text-center" key={day}>
+                      {day}
+                    </TableHead>
                   ))}
                 </TableRow>
               </TableHeader>
@@ -295,33 +297,34 @@ export function WeeklySchedule({
                     {days.map((day) => (
                       <TableCell
                         key={`${day}-${time}`}
-                        className="p-0 cursor-pointer hover:bg-gray-50 relative"
+                        className="p-0 cursor-pointer hover:bg-gray-200 relative"
                         onClick={() => handleCellClick(time, day)}
                       >
                         {selectedCell?.time === time &&
                         selectedCell?.day === day ? (
                           <div className="absolute inset-0 z-10">
                             <DropdownMenu>
-                              <DropdownMenuTrigger className="w-full h-full border-0 p-1">
+                              <DropdownMenuTrigger className="w-full h-full bg-gray-300">
                                 <Select>
-                                  <SelectValue placeholder="Select activity and duration" />
+                                  <SelectValue
+                                    className="w-48"
+                                    placeholder="Select activity and duration"
+                                  />
                                 </Select>
                               </DropdownMenuTrigger>
-                              <DropdownMenuContent className="w-48">
+                              <DropdownMenuContent className="w-48  bg-gray-200">
                                 <DropdownMenuItem>
-                                  <Select onValueChange={handleActivitySelect}>
+                                <Select onValueChange={handleActivitySelect}>
                                     <SelectTrigger className="w-full border-0 text-sm">
                                       <SelectValue placeholder="Select activity" />
                                     </SelectTrigger>
                                     <SelectContent key={`${uuidv4()}`}>
-                                      {Object.entries(groupedActivities).map(
-                                        ([category, categoryActivities]) => (
+                                    {Object.entries(groupedActivities).map(([category, acts]) => (
                                           <SelectGroup key={`${category}`}>
                                             <SelectLabel key={`${category}`}>
                                               {category}
                                             </SelectLabel>
-                                            {categoryActivities.map(
-                                              (activity) => (
+                                            {acts.map((activity) => (
                                                 <SelectItem
                                                   key={`${
                                                     activity.id
