@@ -42,7 +42,7 @@ export function DynamicLineChart({ data }: DynamicLineChartProps) {
         position: "top" as const,
       },
       title: {
-        display: true,
+        display: false,
         text: "Your Progress Over Time",
       },
     },

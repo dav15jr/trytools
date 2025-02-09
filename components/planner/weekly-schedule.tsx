@@ -110,7 +110,7 @@ export function WeeklySchedule({
   }, []);
 
   const loadSchedule = async () => {
-    const loadedSchedule = await onLoad(selectedSchedule);
+    const loadedSchedule = await onLoad(selectedSchedule || undefined);
     if (loadedSchedule) {
       setSchedule(loadedSchedule);
     }
@@ -279,7 +279,7 @@ export function WeeklySchedule({
       <div className="overflow-x-auto">
         <div className="inline-block min-w-full align-middle">
           <div className="overflow-hidden border rounded-lg">
-          <Table>
+            <Table>
               <TableHeader>
                 <TableRow>
                   <TableHead className="w-20 text-center">Time</TableHead>
@@ -314,27 +314,27 @@ export function WeeklySchedule({
                               </DropdownMenuTrigger>
                               <DropdownMenuContent className="w-48  bg-gray-200">
                                 <DropdownMenuItem>
-                                <Select onValueChange={handleActivitySelect}>
+                                  <Select onValueChange={handleActivitySelect}>
                                     <SelectTrigger className="w-full border-0 text-sm">
                                       <SelectValue placeholder="Select activity" />
                                     </SelectTrigger>
                                     <SelectContent key={`${uuidv4()}`}>
-                                    {Object.entries(groupedActivities).map(([category, acts]) => (
+                                      {Object.entries(groupedActivities).map(
+                                        ([category, acts]) => (
                                           <SelectGroup key={`${category}`}>
                                             <SelectLabel key={`${category}`}>
                                               {category}
                                             </SelectLabel>
                                             {acts.map((activity) => (
-                                                <SelectItem
-                                                  key={`${
-                                                    activity.id
-                                                  }:${uuidv4()}`}
-                                                  value={`${activity.category}:${activity.name}`}
-                                                >
-                                                  {activity.name}
-                                                </SelectItem>
-                                              )
-                                            )}
+                                              <SelectItem
+                                                key={`${
+                                                  activity.id
+                                                }:${uuidv4()}`}
+                                                value={`${activity.category}:${activity.name}`}
+                                              >
+                                                {activity.name}
+                                              </SelectItem>
+                                            ))}
                                           </SelectGroup>
                                         )
                                       )}

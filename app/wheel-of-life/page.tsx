@@ -1,328 +1,385 @@
-"use client"
+'use client';
 
-import { useState, useMemo, useEffect } from "react"
-import { useRouter } from "next/navigation"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
-import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import ProtectedRoute from "@/components/auth/protected-route"
-import dynamic from "next/dynamic"
-import { auth, db } from "@/lib/firebase"
-import { onAuthStateChanged } from "firebase/auth"
-import { collection, getDocs, doc, getDoc, setDoc, query, orderBy, limit } from "firebase/firestore"
-import type { Category, ProgressData } from "@/types"
+import { useState, useMemo, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import ProtectedRoute from '@/components/auth/protected-route';
+import dynamic from 'next/dynamic';
+import { auth, db } from '@/lib/firebase';
+import { onAuthStateChanged } from 'firebase/auth';
+import {
+  collection,
+  getDocs,
+  doc,
+  getDoc,
+  setDoc,
+  query,
+  orderBy,
+  limit,
+} from 'firebase/firestore';
+import type { Category, ProgressData } from '@/types';
 
 const DynamicWheelOfLifeChart = dynamic(
-  () => import("@/components/wheel-of-life-chart").then((mod) => mod.WheelOfLifeChart),
-  { loading: () => <p>Loading chart...</p>, ssr: false },
-)
+  () =>
+    import('@/components/wheel-of-life/wheel-of-life-chart').then(
+      (mod) => mod.WheelOfLifeChart
+    ),
+  { loading: () => <p>Loading chart...</p>, ssr: false }
+);
 const DynamicLineChart = dynamic(
-  () => import("@/components/wheel-of-life/dynamic-line-chart").then((mod) => mod.DynamicLineChart),
-  { loading: () => <p>Loading chart...</p>, ssr: false },
-)
-const DynamicHabitTracker = dynamic(() => import("@/components/habit-tracker").then((mod) => mod.HabitTracker), {
-  loading: () => <p>Loading chart...</p>,
-  ssr: false,
-})
+  () =>
+    import('@/components/wheel-of-life/dynamic-line-chart').then(
+      (mod) => mod.DynamicLineChart
+    ),
+  { loading: () => <p>Loading chart...</p>, ssr: false }
+);
+const DynamicHabitTracker = dynamic(
+  () => import('@/components/wheel-of-life/habit-tracker').then((mod) => mod.HabitTracker),
+  {
+    loading: () => <p>Loading chart...</p>,
+    ssr: false,
+  }
+);
 
 const initialCategories: Category[] = [
   {
-    name: "Body",
-    score: "",
+    name: 'Body',
+    score: '',
     tooltip: {
-      score: "Rate your physical health, energy levels, and lifestyle habits",
-      goal: "Set a goal to improve your physical well-being",
+      score: 'Rate your physical health, energy levels, and lifestyle habits',
+      goal: 'Set a goal to improve your physical well-being',
     },
-    goal: "",
+    goal: '',
   },
   {
-    name: "Mind",
-    score: "",
+    name: 'Mind',
+    score: '',
     tooltip: {
-      score: "Rate your mental wellbeing, stress levels, and emotional balance",
-      goal: "Set a goal to enhance your mental health",
+      score: 'Rate your mental wellbeing, stress levels, and emotional balance',
+      goal: 'Set a goal to enhance your mental health',
     },
-    goal: "",
+    goal: '',
   },
   {
-    name: "Soul",
-    score: "",
+    name: 'Soul',
+    score: '',
     tooltip: {
-      score: "Rate your spiritual connection and sense of purpose",
-      goal: "Set a goal to deepen your spiritual practice",
+      score: 'Rate your spiritual connection and sense of purpose',
+      goal: 'Set a goal to deepen your spiritual practice',
     },
-    goal: "",
+    goal: '',
   },
   {
-    name: "Relationships",
-    score: "",
+    name: 'Relationships',
+    score: '',
     tooltip: {
-      score: "Rate the quality of your personal relationships",
-      goal: "Set a goal to improve your relationships",
+      score: 'Rate the quality of your personal relationships',
+      goal: 'Set a goal to improve your relationships',
     },
-    goal: "",
+    goal: '',
   },
   {
-    name: "Romance",
-    score: "",
+    name: 'Romance',
+    score: '',
     tooltip: {
-      score: "Rate your romantic relationship or satisfaction with dating life",
-      goal: "Set a goal for your romantic life",
+      score: 'Rate your romantic relationship or satisfaction with dating life',
+      goal: 'Set a goal for your romantic life',
     },
-    goal: "",
+    goal: '',
   },
   {
-    name: "Money",
-    score: "",
-    tooltip: { score: "Rate your financial situation and money management", goal: "Set a financial goal" },
-    goal: "",
-  },
-  {
-    name: "Career",
-    score: "",
-    tooltip: { score: "Rate your job satisfaction and career progress", goal: "Set a career-related goal" },
-    goal: "",
-  },
-  {
-    name: "Leisure",
-    score: "",
+    name: 'Money',
+    score: '',
     tooltip: {
-      score: "Rate your work-life balance and enjoyment of free time",
-      goal: "Set a goal to improve your leisure time",
+      score: 'Rate your financial situation and money management',
+      goal: 'Set a financial goal',
     },
-    goal: "",
+    goal: '',
   },
   {
-    name: "Self Improvement",
-    score: "",
-    tooltip: { score: "Rate your growth and learning in personal areas", goal: "Set a personal development goal" },
-    goal: "",
-  },
-  {
-    name: "Environment",
-    score: "",
+    name: 'Career',
+    score: '',
     tooltip: {
-      score: "Rate your living space and surrounding environment",
-      goal: "Set a goal to improve your environment",
+      score: 'Rate your job satisfaction and career progress',
+      goal: 'Set a career-related goal',
     },
-    goal: "",
+    goal: '',
   },
-]
+  {
+    name: 'Leisure',
+    score: '',
+    tooltip: {
+      score: 'Rate your work-life balance and enjoyment of free time',
+      goal: 'Set a goal to improve your leisure time',
+    },
+    goal: '',
+  },
+  {
+    name: 'Self Improvement',
+    score: '',
+    tooltip: {
+      score: 'Rate your growth and learning in personal areas',
+      goal: 'Set a personal development goal',
+    },
+    goal: '',
+  },
+  {
+    name: 'Environment',
+    score: '',
+    tooltip: {
+      score: 'Rate your living space and surrounding environment',
+      goal: 'Set a goal to improve your environment',
+    },
+    goal: '',
+  },
+];
 
 export default function WheelOfLifePage() {
-  const [firstName, setFirstName] = useState("")
-  const [date, setDate] = useState("")
-  const [categories, setCategories] = useState<Category[]>(initialCategories)
-  const [showGoalSetting, setShowGoalSetting] = useState(false)
-  const [showForm, setShowForm] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const [user, setUser] = useState(auth.currentUser)
-  const [storedDates, setStoredDates] = useState<string[]>([])
-  const [selectedDate, setSelectedDate] = useState<string | null>(null)
-  const [compareDate, setCompareDate] = useState<string | null>(null)
-  const [compareData, setCompareData] = useState<Category[] | null>(null)
-  const [progressData, setProgressData] = useState<ProgressData[]>([])
-  const router = useRouter()
+  const [firstName, setFirstName] = useState('');
+  const [date, setDate] = useState('');
+  const [categories, setCategories] = useState<Category[]>(initialCategories);
+  const [showGoalSetting, setShowGoalSetting] = useState(false);
+  const [showForm, setShowForm] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [user, setUser] = useState(auth.currentUser);
+  const [storedDates, setStoredDates] = useState<string[]>([]);
+  const [selectedDate, setSelectedDate] = useState<string | null>(null);
+  const [compareDate, setCompareDate] = useState<string | null>(null);
+  const [compareData, setCompareData] = useState<Category[] | null>(null);
+  const [progressData, setProgressData] = useState<ProgressData[]>([]);
+  const router = useRouter();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        setUser(user)
-        fetchStoredDates(user.uid)
+        setUser(user);
+        fetchStoredDates(user.uid);
       } else {
-        router.push("/login")
+        router.push('/login');
       }
-    })
+    });
 
-    return () => unsubscribe()
-  }, [router])
+    return () => unsubscribe();
+  }, [router]);
 
   const fetchStoredDates = async (userId: string) => {
     try {
-      const wheelOfLifeRef = collection(db, "users", userId, "wheelOfLife")
-      const querySnapshot = await getDocs(wheelOfLifeRef)
-      const dates = querySnapshot.docs.map((doc) => doc.id)
-      setStoredDates(dates)
+      const wheelOfLifeRef = collection(db, 'users', userId, 'wheelOfLife');
+      const querySnapshot = await getDocs(wheelOfLifeRef);
+      const dates = querySnapshot.docs.map((doc) => doc.id);
+      setStoredDates(dates);
     } catch (error) {
-      console.error("Error fetching stored dates:", error)
+      console.error('Error fetching stored dates:', error);
     }
-  }
+  };
 
   const totalScore = useMemo(() => {
     return categories.reduce((sum, category) => {
-      const score = Number.parseFloat(category.score) || 0
-      return sum + score
-    }, 0)
-  }, [categories])
+      const score = Number.parseFloat(category.score) || 0;
+      return sum + score;
+    }, 0);
+  }, [categories]);
 
   const comparisonTotalScore = useMemo(() => {
-    if (!compareData) return undefined
+    if (!compareData) return undefined;
     return compareData.reduce((sum, category) => {
-      const score = Number.parseFloat(category.score) || 0
-      return sum + score
-    }, 0)
-  }, [compareData])
+      const score = Number.parseFloat(category.score) || 0;
+      return sum + score;
+    }, 0);
+  }, [compareData]);
 
   const chartData = useMemo(() => {
     return {
       data: categories.map((category) => Number(category.score) || 0),
       labels: categories.map((category) => category.name),
-    }
-  }, [categories])
+    };
+  }, [categories]);
 
   const comparisonChartData = useMemo(() => {
-    if (!compareData) return undefined
-    return compareData.map((category) => Number(category.score) || 0)
-  }, [compareData])
+    if (!compareData) return undefined;
+    return compareData.map((category) => Number(category.score) || 0);
+  }, [compareData]);
 
   const isFormValid = useMemo(() => {
-    return firstName.trim() !== "" && date !== "" && categories.every((category) => category.score !== "")
-  }, [firstName, date, categories])
+    return (
+      firstName.trim() !== '' &&
+      date !== '' &&
+      categories.every((category) => category.score !== '')
+    );
+  }, [firstName, date, categories]);
 
   useEffect(() => {
-    const today = new Date()
-    const formattedDate = convertDate(today.toISOString().split("T")[0])
-    setDate(formattedDate)
-  }, [])
+    const today = new Date();
+    const formattedDate = convertDate(today.toISOString().split('T')[0]);
+    setDate(formattedDate);
+  }, []);
 
   const convertDate = (inputDate: string) => {
-    const date = new Date(inputDate)
-    return date.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "2-digit" }).replace(/ /g, "-")
-  }
+    const date = new Date(inputDate);
+    return date
+      .toLocaleDateString('en-GB', {
+        day: '2-digit',
+        month: 'short',
+        year: '2-digit',
+      })
+      .replace(/ /g, '-');
+  };
 
   const handleScoreSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    setShowGoalSetting(true)
-    const convertedDate = convertDate(date)
-    setDate(convertedDate)
-  }
+    e.preventDefault();
+    setShowGoalSetting(true);
+    const convertedDate = convertDate(date);
+    setDate(convertedDate);
+  };
 
   const handleGoalSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setError(null)
+    e.preventDefault();
+    setError(null);
     if (!user) {
-      setError("You must be logged in to save your goals.")
-      return
+      setError('You must be logged in to save your goals.');
+      return;
     }
 
-    const dataToSave = categories.reduce(
-      (acc, category) => {
-        acc[category.name] = {
-          Score: Number.parseFloat(category.score),
-          Goal: category.goal,
-        }
-        return acc
-      },
-      {} as Record<string, { Score: number; Goal: string }>,
-    )
+    const dataToSave = categories.reduce((acc, category) => {
+      acc[category.name] = {
+        Score: Number.parseFloat(category.score),
+        Goal: category.goal,
+      };
+      return acc;
+    }, {} as Record<string, { Score: number; Goal: string }>);
 
     try {
-      const wheelOfLifeRef = doc(collection(db, "users", user.uid, "wheelOfLife"), date)
+      const wheelOfLifeRef = doc(
+        collection(db, 'users', user.uid, 'wheelOfLife'),
+        date
+      );
       await setDoc(wheelOfLifeRef, {
         firstName,
         date,
         ...dataToSave,
-      })
-      console.log("Data saved successfully")
-      setShowForm(false)
-      fetchStoredDates(user.uid)
+      });
+      console.log('Data saved successfully');
+      setShowForm(false);
+      fetchStoredDates(user.uid);
     } catch (error: any) {
-      console.error("Error saving data:", error)
-      setError(`Error saving data: ${error.message}`)
+      console.error('Error saving data:', error);
+      setError(`Error saving data: ${error.message}`);
     }
-  }
+  };
 
   const handleEditScores = () => {
-    setShowGoalSetting(false)
-  }
+    setShowGoalSetting(false);
+  };
 
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>, index: number) => {
-    if (event.key === "Enter") {
-      event.preventDefault()
-      const nextInput = document.getElementById(`category-${index + 1}`)
+  const handleKeyDown = (
+    event: React.KeyboardEvent<HTMLInputElement>,
+    index: number
+  ) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      const nextInput = document.getElementById(`category-${index + 1}`);
       if (nextInput) {
-        ;(nextInput as HTMLInputElement).focus()
+        (nextInput as HTMLInputElement).focus();
       } else {
-        const submitButton = document.querySelector('button[type="submit"]')
+        const submitButton = document.querySelector('button[type="submit"]');
         if (submitButton) {
-          ;(submitButton as HTMLButtonElement).focus()
+          (submitButton as HTMLButtonElement).focus();
         }
       }
     }
-  }
+  };
 
   const handleCreateNewWheel = () => {
-    setCategories(initialCategories)
-    setShowForm(true)
-    setShowGoalSetting(false)
-    setSelectedDate(null)
-    setCompareDate(null)
-    setCompareData(null)
-  }
+    setCategories(initialCategories);
+    setShowForm(true);
+    setShowGoalSetting(false);
+    setSelectedDate(null);
+    setCompareDate(null);
+    setCompareData(null);
+  };
 
   const handleLoadWheel = async () => {
-    if (!user || !selectedDate) return
+    if (!user || !selectedDate) return;
 
     try {
-      const wheelOfLifeRef = doc(collection(db, "users", user.uid, "wheelOfLife"), selectedDate)
-      const wheelOfLifeDoc = await getDoc(wheelOfLifeRef)
+      const wheelOfLifeRef = doc(
+        collection(db, 'users', user.uid, 'wheelOfLife'),
+        selectedDate
+      );
+      const wheelOfLifeDoc = await getDoc(wheelOfLifeRef);
 
       if (wheelOfLifeDoc.exists()) {
-        const data = wheelOfLifeDoc.data()
+        const data = wheelOfLifeDoc.data();
         const loadedCategories = initialCategories.map((category) => ({
           ...category,
-          score: data[category.name]?.Score.toString() || "",
-          goal: data[category.name]?.Goal || "",
-        }))
-        setCategories(loadedCategories)
-        setFirstName(data.firstName || "")
-        setDate(data.date || selectedDate)
-        setShowForm(false)
-        setCompareData(null)
-        setCompareDate(null)
+          score: data[category.name]?.Score.toString() || '',
+          goal: data[category.name]?.Goal || '',
+        }));
+        setCategories(loadedCategories);
+        setFirstName(data.firstName || '');
+        setDate(data.date || selectedDate);
+        setShowForm(false);
+        setCompareData(null);
+        setCompareDate(null);
       } else {
-        setError("No data found for the selected date")
+        setError('No data found for the selected date');
       }
     } catch (error: any) {
-      console.error("Error loading data:", error)
-      setError(`Error loading data: ${error.message}`)
+      console.error('Error loading data:', error);
+      setError(`Error loading data: ${error.message}`);
     }
-  }
+  };
 
   const handleCompare = async () => {
-    if (!user || !compareDate) return
+    if (!user || !compareDate) return;
 
     try {
-      const wheelOfLifeRef = doc(collection(db, "users", user.uid, "wheelOfLife"), compareDate)
-      const wheelOfLifeDoc = await getDoc(wheelOfLifeRef)
+      const wheelOfLifeRef = doc(
+        collection(db, 'users', user.uid, 'wheelOfLife'),
+        compareDate
+      );
+      const wheelOfLifeDoc = await getDoc(wheelOfLifeRef);
 
       if (wheelOfLifeDoc.exists()) {
-        const data = wheelOfLifeDoc.data()
+        const data = wheelOfLifeDoc.data();
         const loadedCategories = initialCategories.map((category) => ({
           ...category,
-          score: data[category.name]?.Score.toString() || "",
-          goal: data[category.name]?.Goal || "",
-        }))
-        setCompareData(loadedCategories)
-        setCompareDate(compareDate)
+          score: data[category.name]?.Score.toString() || '',
+          goal: data[category.name]?.Goal || '',
+        }));
+        setCompareData(loadedCategories);
+        setCompareDate(compareDate);
       } else {
-        setError("No data found for the comparison date")
+        setError('No data found for the comparison date');
       }
     } catch (error: any) {
-      console.error("Error loading comparison data:", error)
-      setError(`Error loading comparison data: ${error.message}`)
+      console.error('Error loading comparison data:', error);
+      setError(`Error loading comparison data: ${error.message}`);
     }
-  }
+  };
 
   const handleRemoveComparison = () => {
-    setCompareData(null)
-    setCompareDate(null)
-  }
+    setCompareData(null);
+    setCompareDate(null);
+  };
 
   const renderScoresForm = () => (
     <form onSubmit={handleScoreSubmit} className="space-y-6">
@@ -380,28 +437,32 @@ export default function WheelOfLifePage() {
               step="0.1"
               value={category.score}
               onChange={(e) => {
-                const value = e.target.value
-                if (value === "" || (Number.parseFloat(value) >= 0 && Number.parseFloat(value) <= 10)) {
-                  const newCategories = [...categories]
-                  newCategories[index].score = value
-                  setCategories(newCategories)
+                const value = e.target.value;
+                if (
+                  value === '' ||
+                  (Number.parseFloat(value) >= 0 &&
+                    Number.parseFloat(value) <= 10)
+                ) {
+                  const newCategories = [...categories];
+                  newCategories[index].score = value;
+                  setCategories(newCategories);
                 }
               }}
               onKeyDown={(e) => handleKeyDown(e, index)}
               onBlur={(e) => {
-                const value = Number.parseFloat(e.target.value)
+                const value = Number.parseFloat(e.target.value);
                 if (isNaN(value) || value < 0) {
-                  const newCategories = [...categories]
-                  newCategories[index].score = "0"
-                  setCategories(newCategories)
+                  const newCategories = [...categories];
+                  newCategories[index].score = '0';
+                  setCategories(newCategories);
                 } else if (value > 10) {
-                  const newCategories = [...categories]
-                  newCategories[index].score = "10"
-                  setCategories(newCategories)
+                  const newCategories = [...categories];
+                  newCategories[index].score = '10';
+                  setCategories(newCategories);
                 } else {
-                  const newCategories = [...categories]
-                  newCategories[index].score = value.toFixed(1)
-                  setCategories(newCategories)
+                  const newCategories = [...categories];
+                  newCategories[index].score = value.toFixed(1);
+                  setCategories(newCategories);
                 }
               }}
               placeholder="0-10"
@@ -418,7 +479,7 @@ export default function WheelOfLifePage() {
         </Button>
       </div>
     </form>
-  )
+  );
 
   const renderGoalSettingForm = () => (
     <form onSubmit={handleGoalSubmit} className="space-y-6">
@@ -427,7 +488,10 @@ export default function WheelOfLifePage() {
           <div key={index} className="space-y-2">
             <div className="flex items-center justify-between">
               <Label htmlFor={`goal-${index}`}>
-                {category.name} <span className="text-sm text-gray-500">(Score: {category.score})</span>
+                {category.name}{' '}
+                <span className="text-sm text-gray-500">
+                  (Score: {category.score})
+                </span>
               </Label>
               <TooltipProvider>
                 <Tooltip>
@@ -450,9 +514,9 @@ export default function WheelOfLifePage() {
               id={`goal-${index}`}
               value={category.goal}
               onChange={(e) => {
-                const newCategories = [...categories]
-                newCategories[index].goal = e.target.value
-                setCategories(newCategories)
+                const newCategories = [...categories];
+                newCategories[index].goal = e.target.value;
+                setCategories(newCategories);
               }}
               placeholder="Enter your goal"
               required
@@ -475,7 +539,7 @@ export default function WheelOfLifePage() {
         <Button type="submit">Save Goals</Button>
       </div>
     </form>
-  )
+  );
 
   const renderGoalsList = (categories: Category[]) => (
     <div className="mt-2">
@@ -488,58 +552,92 @@ export default function WheelOfLifePage() {
         ))}
       </ul>
     </div>
-  )
+  );
 
   const fetchProgressData = async (userId: string) => {
     try {
-      const wheelOfLifeRef = collection(db, "users", userId, "wheelOfLife")
-      const q = query(wheelOfLifeRef, orderBy("date", "desc"), limit(5))
-      const querySnapshot = await getDocs(q)
+      const wheelOfLifeRef = collection(db, 'users', userId, 'wheelOfLife');
+      const q = query(wheelOfLifeRef, orderBy('date', 'desc'), limit(5));
+      const querySnapshot = await getDocs(q);
       const data = querySnapshot.docs.map((doc) => {
-        const wheelData = doc.data()
-        const totalScore = Object.values(wheelData).reduce((sum: number, value: any) => {
-          return sum + (typeof value.Score === "number" ? value.Score : 0)
-        }, 0)
-        return { date: doc.id, totalScore }
-      })
-      setProgressData(data.reverse())
+        const wheelData = doc.data();
+        const totalScore = Object.values(wheelData).reduce(
+          (sum: number, value: any) => {
+            return sum + (typeof value.Score === 'number' ? value.Score : 0);
+          },
+          0
+        );
+        return { date: doc.id, totalScore };
+      });
+      setProgressData(data.reverse());
     } catch (error) {
-      console.error("Error fetching progress data:", error)
+      console.error('Error fetching progress data:', error);
     }
-  }
+  };
 
   useEffect(() => {
     if (user) {
-      fetchProgressData(user.uid)
+      fetchProgressData(user.uid);
     }
-  }, [user, fetchProgressData]) // Added fetchProgressData to dependencies
+  }, [user, fetchProgressData]); // Added fetchProgressData to dependencies
 
   const renderProgressChart = () => (
     <Card>
       <CardHeader>
         <CardTitle>Your Progress</CardTitle>
       </CardHeader>
-      <CardContent>
-        <div className="h-64">
+      <CardContent className="w-full">
+        <div className="w-full">
           <DynamicLineChart data={progressData} />
         </div>
       </CardContent>
     </Card>
-  )
+  );
 
   if (!user) {
-    return <div>Loading...</div>
+    return <div>Loading...</div>;
   }
 
   return (
     <ProtectedRoute>
       <div className="min-h-screen bg-gray-50 py-6 md:py-12 px-4">
         <div className="max-w-6xl mx-auto space-y-8">
-          <div className="text-center space-y-4">
-            <h1 className="text-4xl font-bold text-gray-900">Wheel of Life Assessment Tool</h1>
-            <p className="text-gray-600 max-w-2xl mx-auto">
-              This simple but powerful Wheel of Life assessment tool will enable you to improve your overall life faster
-              so you can live a happier more fulfilled life.
+          <div className="space-y-4 text-gray-600">
+            <h1 className="text-center text-4xl font-bold text-gray-900">
+              Wheel of Life Assessment Tool
+            </h1>
+            <p className="text-gray-600 mx-auto">
+              This simple but powerful Wheel of Life assessment tool will enable
+              you to improve your overall life faster so you can live a happier
+              more fulfilled life.
+            </p>
+            <p>The Wheel of Life assessment tool will help:</p>
+            <ul className="list-disc list-outside space-y-2 ml-6">
+              <li>
+                Give you a visual representation of your life satisfaction so
+                you can clearly see how your life looks currently.
+              </li>
+              <li>
+                Assess your life in the 10 areas so you can identify and focus
+                on improving the areas that you value, enabling you to improve
+                your life faster.
+              </li>
+              <li>
+                Set SMART Goals and Actions so you know what you need to do and
+                why, which means you will be motivated to stick to your goals.
+              </li>
+              <li>
+                Develop better habits that are aligned with the person you want
+                to become and live the life you desire.
+              </li>
+            </ul>
+            <p>
+              Begin by ranking your level of happiness between 0 – 10 in each
+              category, use the? to help guide you.
+            </p>
+            <p>
+              For reference <strong>(0 = Unhappy, 3 = Needs Improvement, 5 = Can
+              improve, 7 = Happy, 10 = Very Happy)</strong>
             </p>
           </div>
 
@@ -555,7 +653,10 @@ export default function WheelOfLifePage() {
                   <div className="space-y-6">
                     <div className="flex flex-wrap justify-between items-center gap-4">
                       <div className="flex items-center space-x-4">
-                        <Select onValueChange={(value) => setSelectedDate(value)} value={selectedDate || undefined}>
+                        <Select
+                          onValueChange={(value) => setSelectedDate(value)}
+                          value={selectedDate || undefined}
+                        >
                           <SelectTrigger className="w-[180px]">
                             <SelectValue placeholder="Select date" />
                           </SelectTrigger>
@@ -567,17 +668,26 @@ export default function WheelOfLifePage() {
                             ))}
                           </SelectContent>
                         </Select>
-                        <Button onClick={handleLoadWheel} disabled={!selectedDate}>
+                        <Button
+                          onClick={handleLoadWheel}
+                          disabled={!selectedDate}
+                        >
                           Load Wheel
                         </Button>
                       </div>
                       {!showForm && (
-                        <Button onClick={handleCreateNewWheel} variant="outline">
+                        <Button
+                          onClick={handleCreateNewWheel}
+                          variant="outline"
+                        >
                           Create New Wheel
                         </Button>
                       )}
                       <div className="flex items-center space-x-4">
-                        <Select onValueChange={(value) => setCompareDate(value)} value={compareDate || undefined}>
+                        <Select
+                          onValueChange={(value) => setCompareDate(value)}
+                          value={compareDate || undefined}
+                        >
                           <SelectTrigger className="w-[180px]">
                             <SelectValue placeholder="Compare with" />
                           </SelectTrigger>
@@ -591,7 +701,10 @@ export default function WheelOfLifePage() {
                               ))}
                           </SelectContent>
                         </Select>
-                        <Button onClick={handleCompare} disabled={!selectedDate || !compareDate}>
+                        <Button
+                          onClick={handleCompare}
+                          disabled={!selectedDate || !compareDate}
+                        >
                           Compare
                         </Button>
                       </div>
@@ -620,7 +733,10 @@ export default function WheelOfLifePage() {
                                 />
                                 {compareData && (
                                   <div className="mt-4 text-center">
-                                    <Button onClick={handleRemoveComparison} variant="outline">
+                                    <Button
+                                      onClick={handleRemoveComparison}
+                                      variant="outline"
+                                    >
                                       Remove Comparison
                                     </Button>
                                   </div>
@@ -632,11 +748,15 @@ export default function WheelOfLifePage() {
                                     <CardTitle>Goals</CardTitle>
                                   </CardHeader>
                                   <CardContent>
-                                    <h3 className="text-lg font-semibold mb-2">Current Goals</h3>
+                                    <h3 className="text-lg font-semibold mb-2">
+                                      Current Goals
+                                    </h3>
                                     {renderGoalsList(categories)}
                                     {compareData && (
                                       <>
-                                        <h3 className="text-lg font-semibold mt-6 mb-2">Previous Goals</h3>
+                                        <h3 className="text-lg font-semibold mt-6 mb-2">
+                                          Previous Goals
+                                        </h3>
                                         {renderGoalsList(compareData)}
                                       </>
                                     )}
@@ -673,6 +793,5 @@ export default function WheelOfLifePage() {
         </div>
       </div>
     </ProtectedRoute>
-  )
+  );
 }
-

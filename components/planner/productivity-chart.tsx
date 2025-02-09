@@ -39,23 +39,22 @@ export function ProductivityChart({ data }: ProductivityChartProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-lg">Week Productivity</CardTitle>
+        <CardTitle >Week Productivity</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="h-[200px] mb-4">{isMounted && <DynamicPieChart data={chartData} />}</div>
-
+        <div className="h-[200px] w-full mb-3">{isMounted && <DynamicPieChart data={chartData} />}</div>
         <Table>
           <TableBody>
             {chartData.map((item) => (
               <TableRow key={item.name}>
                 <TableCell className="font-medium" style={{ color: item.color }}>
-                  {item.name === "HLV" && "HIGH LIFE TIME VALUE"}
-                  {item.name === "HDV" && "HIGH DOLLAR VALUE"}
-                  {item.name === "LDV" && "LOW DOLLAR VALUE"}
-                  {item.name === "ZV" && "ZERO DOLLAR VALUE"}
+                  {item.name === "HLV" && "HIGH LIFE TIME"}
+                  {item.name === "HDV" && "HIGH DOLLAR"}
+                  {item.name === "LDV" && "LOW DOLLAR"}
+                  {item.name === "ZV" && "ZERO DOLLAR"}
                 </TableCell>
                 <TableCell className="text-right">
-                  {Math.round(item.value)} ({Math.round((item.value / totalHours) * 100)}%)
+                  {Math.round(item.value)} hours ({Math.round((item.value / totalHours) * 100)}%)
                 </TableCell>
               </TableRow>
             ))}
