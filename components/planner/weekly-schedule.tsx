@@ -57,7 +57,9 @@ interface Activity {
 interface WeeklyScheduleProps {
   activities: Activity[];
   onSave: (schedule: ScheduleData) => void;
-  onLoad: (selectedSchedule?: string) => Promise<ScheduleData | undefined>;
+  onLoad: (
+    selectedSchedule: string | null
+  ) => Promise<ScheduleData | null>;
   savedSchedules: string[];
 }
 
@@ -110,7 +112,7 @@ export function WeeklySchedule({
   }, []);
 
   const loadSchedule = async () => {
-    const loadedSchedule = await onLoad(selectedSchedule || undefined);
+    const loadedSchedule = await onLoad(selectedSchedule || null);
     if (loadedSchedule) {
       setSchedule(loadedSchedule);
     }

@@ -87,8 +87,8 @@ export function WheelOfLifeChart({
           display: true,
           centerPointLabels: true,
           font: {
-            size: 12
-          }
+            size: 12,
+          },
         },
         angleLines: {
           display: true,
@@ -100,8 +100,8 @@ export function WheelOfLifeChart({
     },
     plugins: {
       legend: {
-        position: 'top',
-        display: false, // Remove chart keys
+        position: 'top' as const,
+        display: false,
       },
       tooltip: {
         callbacks: {

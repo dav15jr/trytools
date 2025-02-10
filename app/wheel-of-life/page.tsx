@@ -64,95 +64,107 @@ const DynamicHabitTracker = dynamic(
 
 const initialCategories: Category[] = [
   {
-    name: "Body",
-    score: "",
+    name: 'Body',
+    score: '',
     tooltip: {
-      score: "Rate your physical health, energy levels, and lifestyle habits",
-      goal: "Set a goal to improve your physical well-being",
+      score: 'Rate your physical health, energy levels, and lifestyle habits',
+      goal: 'Set a goal to improve your physical well-being',
     },
-    goal: "",
+    goal: '',
   },
   {
-    name: "Mind",
-    score: "",
+    name: 'Mind',
+    score: '',
     tooltip: {
-      score: "Rate your mental wellbeing, stress levels, and emotional balance",
-      goal: "Set a goal to enhance your mental health",
+      score: 'Rate your mental wellbeing, stress levels, and emotional balance',
+      goal: 'Set a goal to enhance your mental health',
     },
-    goal: "",
+    goal: '',
   },
   {
-    name: "Soul",
-    score: "",
+    name: 'Soul',
+    score: '',
     tooltip: {
-      score: "Rate your spiritual connection and sense of purpose",
-      goal: "Set a goal to deepen your spiritual practice",
+      score: 'Rate your spiritual connection and sense of purpose',
+      goal: 'Set a goal to deepen your spiritual practice',
     },
-    goal: "",
+    goal: '',
   },
   {
-    name: "Career",
-    score: "",
-    tooltip: { score: "Rate your job satisfaction and career progress", goal: "Set a career-related goal" },
-    goal: "",
-  },
-  {
-    name: "Self Improvement",
-    score: "",
-    tooltip: { score: "Rate your growth and learning in personal areas", goal: "Set a personal development goal" },
-    goal: "",
-  },
-  {
-    name: "Relationships",
-    score: "",
+    name: 'Career',
+    score: '',
     tooltip: {
-      score: "Rate the quality of your personal relationships",
-      goal: "Set a goal to improve your relationships",
+      score: 'Rate your job satisfaction and career progress',
+      goal: 'Set a career-related goal',
     },
-    goal: "",
+    goal: '',
   },
   {
-    name: "Romance",
-    score: "",
+    name: 'Self Improvement',
+    score: '',
     tooltip: {
-      score: "Rate your romantic relationship or satisfaction with dating life",
-      goal: "Set a goal for your romantic life",
+      score: 'Rate your growth and learning in personal areas',
+      goal: 'Set a personal development goal',
     },
-    goal: "",
+    goal: '',
   },
   {
-    name: "Money",
-    score: "",
-    tooltip: { score: "Rate your financial situation and money management", goal: "Set a financial goal" },
-    goal: "",
-  },
-  {
-    name: "Leisure",
-    score: "",
+    name: 'Relationships',
+    score: '',
     tooltip: {
-      score: "Rate your work-life balance and enjoyment of free time",
-      goal: "Set a goal to improve your leisure time",
+      score: 'Rate the quality of your personal relationships',
+      goal: 'Set a goal to improve your relationships',
     },
-    goal: "",
+    goal: '',
   },
   {
-    name: "Environment",
-    score: "",
+    name: 'Romance',
+    score: '',
     tooltip: {
-      score: "Rate your living space and surrounding environment",
-      goal: "Set a goal to improve your environment",
+      score: 'Rate your romantic relationship or satisfaction with dating life',
+      goal: 'Set a goal for your romantic life',
     },
-    goal: "",
+    goal: '',
   },
-]
+  {
+    name: 'Money',
+    score: '',
+    tooltip: {
+      score: 'Rate your financial situation and money management',
+      goal: 'Set a financial goal',
+    },
+    goal: '',
+  },
+  {
+    name: 'Leisure',
+    score: '',
+    tooltip: {
+      score: 'Rate your work-life balance and enjoyment of free time',
+      goal: 'Set a goal to improve your leisure time',
+    },
+    goal: '',
+  },
+  {
+    name: 'Environment',
+    score: '',
+    tooltip: {
+      score: 'Rate your living space and surrounding environment',
+      goal: 'Set a goal to improve your environment',
+    },
+    goal: '',
+  },
+];
 
 export default function WheelOfLifePage() {
   const { user } = useAuth();
   // const router = useRouter();
   const [firstName, setFirstName] = useState('');
   const [date, setDate] = useState('');
+  const [convDate, setConvDate] = useState('');
+  const [formDate, setFormDate] = useState('');
   const [categories, setCategories] = useState<Category[]>(initialCategories);
-  const [showGoalSetting, setShowGoalSetting] = useState(false);
+  const [showGoalForm, setShowGoalForm] = useState(false);
+  const [showScoreForm, setShowScoreForm] = useState(true);
   const [showForm, setShowForm] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [storedDates, setStoredDates] = useState<string[]>([]);
@@ -213,15 +225,13 @@ export default function WheelOfLifePage() {
     );
   }, [firstName, date, categories]);
 
-  useEffect(() => {
-    const today = new Date();
-    const formattedDate = convertDate(today.toISOString().split('T')[0]);
-    setDate(formattedDate);
-  }, []);
+  // useEffect(() => {
+  //   console.log('first date', date);
+  // }, []);
 
   const convertDate = (inputDate: string) => {
-    const date = new Date(inputDate);
-    return date
+    const newDate = new Date(inputDate);
+    return newDate
       .toLocaleDateString('en-GB', {
         day: '2-digit',
         month: 'short',
@@ -229,12 +239,33 @@ export default function WheelOfLifePage() {
       })
       .replace(/ /g, '-');
   };
+  const formatDate = (inputDate: string) => {
+    const today = new Date(inputDate);
+    const inputDateFormat = today.toISOString().split('T')[0]; // YYYY-MM-DD format
+    return inputDateFormat //
+
+
+  };
+
+
+  const onChangeDate = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const inputDate = e.target.value;
+    const formDate = new Date(e.target.value);
+    setDate(inputDate);
+    setFormDate(inputDate);
+
+  };
 
   const handleScoreSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setShowGoalSetting(true);
+    setShowGoalForm(true);
+    setShowScoreForm(false);
     const convertedDate = convertDate(date);
+    const formatedDate = formatDate(date);
+    setConvDate(convertedDate);
     setDate(convertedDate);
+    // setDate(formatedDate);
+    // setDate(formDate);
   };
 
   const handleGoalSubmit = async (e: React.FormEvent) => {
@@ -256,11 +287,11 @@ export default function WheelOfLifePage() {
     try {
       const wheelOfLifeRef = doc(
         collection(db, 'users', user.uid, 'wheelOfLife'),
-        date
+        convDate
       );
       await setDoc(wheelOfLifeRef, {
         firstName,
-        date,
+        date: convDate,
         ...dataToSave,
       });
       console.log('Data saved successfully');
@@ -273,8 +304,21 @@ export default function WheelOfLifePage() {
   };
 
   const handleEditScores = () => {
-    setShowGoalSetting(false);
+    setShowScoreForm(true);
+    setShowGoalForm(false);
+    setDate(formDate);
+    // const convertedDate = convertDate(date);
+    setDate(date)
+    console.log('showScoreForm changed to:', showScoreForm);
+    console.log('showGoalForm changed to:', showGoalForm);
+
   };
+
+  // Add this useEffect to monitor state changes
+  useEffect(() => {
+    console.log('showGoalForm changed to:', showGoalForm);
+    console.log('showScoreForm changed to:', showScoreForm);
+  }, [showGoalForm, showScoreForm]);
 
   const handleKeyDown = (
     event: React.KeyboardEvent<HTMLInputElement>,
@@ -297,7 +341,8 @@ export default function WheelOfLifePage() {
   const handleCreateNewWheel = () => {
     setCategories(initialCategories);
     setShowForm(true);
-    setShowGoalSetting(false);
+    setShowGoalForm(false);
+    setShowScoreForm(true);
     setSelectedDate(null);
     setCompareDate(null);
     setCompareData(null);
@@ -322,6 +367,7 @@ export default function WheelOfLifePage() {
         }));
         setCategories(loadedCategories);
         setFirstName(data.firstName || '');
+        setConvDate(data.convDate || selectedDate);
         setDate(data.date || selectedDate);
         setShowForm(false);
         setCompareData(null);
@@ -387,7 +433,7 @@ export default function WheelOfLifePage() {
             id="date"
             type="date"
             value={date}
-            onChange={(e) => setDate(e.target.value)}
+            onChange={onChangeDate}
             className="mt-1"
             required
           />
@@ -468,7 +514,7 @@ export default function WheelOfLifePage() {
     </form>
   );
 
-  const renderGoalSettingForm = () => (
+  const renderGoalForm = () => (
     <form onSubmit={handleGoalSubmit} className="space-y-6">
       <div className="grid md:grid-cols-2 gap-4">
         {categories.map((category, index) => (
@@ -544,7 +590,7 @@ export default function WheelOfLifePage() {
   const fetchProgressData = async (userId: string) => {
     try {
       const wheelOfLifeRef = collection(db, 'users', userId, 'wheelOfLife');
-      const q = query(wheelOfLifeRef, orderBy('date', 'desc'), limit(5));
+      const q = query(wheelOfLifeRef, orderBy('date', 'desc'), limit(20));
       const querySnapshot = await getDocs(q);
       const data = querySnapshot.docs.map((doc) => {
         const wheelData = doc.data();
@@ -556,7 +602,44 @@ export default function WheelOfLifePage() {
         );
         return { date: doc.id, totalScore };
       });
-      setProgressData(data.reverse());
+
+      // Sort the data chronologically
+      const sortedData = data.sort((a, b) => {
+        const [dayA, monthA, yearA] = a.date.split('-');
+        const [dayB, monthB, yearB] = b.date.split('-');
+
+        // Convert month abbreviation to number (Jan = 0, Feb = 1, etc.)
+        const monthMap: { [key: string]: number } = {
+          Jan: 0,
+          Feb: 1,
+          Mar: 2,
+          Apr: 3,
+          May: 4,
+          Jun: 5,
+          Jul: 6,
+          Aug: 7,
+          Sep: 8,
+          Oct: 9,
+          Nov: 10,
+          Dec: 11,
+        };
+
+        // Create dates using the components (add 2000 to year since it's YY format)
+        const dateA = new Date(
+          2000 + parseInt(yearA),
+          monthMap[monthA],
+          parseInt(dayA)
+        );
+        const dateB = new Date(
+          2000 + parseInt(yearB),
+          monthMap[monthB],
+          parseInt(dayB)
+        );
+
+        return dateA.getTime() - dateB.getTime();
+      });
+
+      setProgressData(sortedData);
     } catch (error) {
       console.error('Error fetching progress data:', error);
     }
@@ -700,8 +783,8 @@ export default function WheelOfLifePage() {
                       <div className="flex flex-col lg:flex-row gap-8">
                         <div className="w-full">
                           {showForm ? (
-                            showGoalSetting ? (
-                              renderGoalSettingForm()
+                            showGoalForm && !showScoreForm ? (
+                              renderGoalForm()
                             ) : (
                               renderScoresForm()
                             )
@@ -714,7 +797,7 @@ export default function WheelOfLifePage() {
                                   labels={chartData.labels}
                                   currentTotalScore={totalScore}
                                   comparisonTotalScore={comparisonTotalScore}
-                                  currentDate={date}
+                                  currentDate={convDate}
                                   comparisonDate={compareDate || undefined}
                                 />
                                 {compareData && (
@@ -760,7 +843,7 @@ export default function WheelOfLifePage() {
                               labels={chartData.labels}
                               currentTotalScore={totalScore}
                               comparisonTotalScore={comparisonTotalScore}
-                              currentDate={date}
+                              currentDate={convDate}
                               comparisonDate={compareDate || undefined}
                             />
                           </div>
