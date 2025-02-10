@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useMemo, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+// import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -23,8 +23,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import ProtectedRoute from '@/components/auth/protected-route';
 import dynamic from 'next/dynamic';
-import { auth, db } from '@/lib/firebase';
-import { onAuthStateChanged } from 'firebase/auth';
+import { db } from '@/lib/firebase';
 import {
   collection,
   getDocs,
@@ -36,6 +35,7 @@ import {
   limit,
 } from 'firebase/firestore';
 import type { Category, ProgressData } from '@/types';
+import { useAuth } from '@/contexts/auth-context';
 
 const DynamicWheelOfLifeChart = dynamic(
   () =>
@@ -52,7 +52,10 @@ const DynamicLineChart = dynamic(
   { loading: () => <p>Loading chart...</p>, ssr: false }
 );
 const DynamicHabitTracker = dynamic(
-  () => import('@/components/wheel-of-life/habit-tracker').then((mod) => mod.HabitTracker),
+  () =>
+    import('@/components/wheel-of-life/habit-tracker').then(
+      (mod) => mod.HabitTracker
+    ),
   {
     loading: () => <p>Loading chart...</p>,
     ssr: false,
@@ -61,124 +64,108 @@ const DynamicHabitTracker = dynamic(
 
 const initialCategories: Category[] = [
   {
-    name: 'Body',
-    score: '',
+    name: "Body",
+    score: "",
     tooltip: {
-      score: 'Rate your physical health, energy levels, and lifestyle habits',
-      goal: 'Set a goal to improve your physical well-being',
+      score: "Rate your physical health, energy levels, and lifestyle habits",
+      goal: "Set a goal to improve your physical well-being",
     },
-    goal: '',
+    goal: "",
   },
   {
-    name: 'Mind',
-    score: '',
+    name: "Mind",
+    score: "",
     tooltip: {
-      score: 'Rate your mental wellbeing, stress levels, and emotional balance',
-      goal: 'Set a goal to enhance your mental health',
+      score: "Rate your mental wellbeing, stress levels, and emotional balance",
+      goal: "Set a goal to enhance your mental health",
     },
-    goal: '',
+    goal: "",
   },
   {
-    name: 'Soul',
-    score: '',
+    name: "Soul",
+    score: "",
     tooltip: {
-      score: 'Rate your spiritual connection and sense of purpose',
-      goal: 'Set a goal to deepen your spiritual practice',
+      score: "Rate your spiritual connection and sense of purpose",
+      goal: "Set a goal to deepen your spiritual practice",
     },
-    goal: '',
+    goal: "",
   },
   {
-    name: 'Relationships',
-    score: '',
-    tooltip: {
-      score: 'Rate the quality of your personal relationships',
-      goal: 'Set a goal to improve your relationships',
-    },
-    goal: '',
+    name: "Career",
+    score: "",
+    tooltip: { score: "Rate your job satisfaction and career progress", goal: "Set a career-related goal" },
+    goal: "",
   },
   {
-    name: 'Romance',
-    score: '',
-    tooltip: {
-      score: 'Rate your romantic relationship or satisfaction with dating life',
-      goal: 'Set a goal for your romantic life',
-    },
-    goal: '',
+    name: "Self Improvement",
+    score: "",
+    tooltip: { score: "Rate your growth and learning in personal areas", goal: "Set a personal development goal" },
+    goal: "",
   },
   {
-    name: 'Money',
-    score: '',
+    name: "Relationships",
+    score: "",
     tooltip: {
-      score: 'Rate your financial situation and money management',
-      goal: 'Set a financial goal',
+      score: "Rate the quality of your personal relationships",
+      goal: "Set a goal to improve your relationships",
     },
-    goal: '',
+    goal: "",
   },
   {
-    name: 'Career',
-    score: '',
+    name: "Romance",
+    score: "",
     tooltip: {
-      score: 'Rate your job satisfaction and career progress',
-      goal: 'Set a career-related goal',
+      score: "Rate your romantic relationship or satisfaction with dating life",
+      goal: "Set a goal for your romantic life",
     },
-    goal: '',
+    goal: "",
   },
   {
-    name: 'Leisure',
-    score: '',
-    tooltip: {
-      score: 'Rate your work-life balance and enjoyment of free time',
-      goal: 'Set a goal to improve your leisure time',
-    },
-    goal: '',
+    name: "Money",
+    score: "",
+    tooltip: { score: "Rate your financial situation and money management", goal: "Set a financial goal" },
+    goal: "",
   },
   {
-    name: 'Self Improvement',
-    score: '',
+    name: "Leisure",
+    score: "",
     tooltip: {
-      score: 'Rate your growth and learning in personal areas',
-      goal: 'Set a personal development goal',
+      score: "Rate your work-life balance and enjoyment of free time",
+      goal: "Set a goal to improve your leisure time",
     },
-    goal: '',
+    goal: "",
   },
   {
-    name: 'Environment',
-    score: '',
+    name: "Environment",
+    score: "",
     tooltip: {
-      score: 'Rate your living space and surrounding environment',
-      goal: 'Set a goal to improve your environment',
+      score: "Rate your living space and surrounding environment",
+      goal: "Set a goal to improve your environment",
     },
-    goal: '',
+    goal: "",
   },
-];
+]
 
 export default function WheelOfLifePage() {
+  const { user } = useAuth();
+  // const router = useRouter();
   const [firstName, setFirstName] = useState('');
   const [date, setDate] = useState('');
   const [categories, setCategories] = useState<Category[]>(initialCategories);
   const [showGoalSetting, setShowGoalSetting] = useState(false);
   const [showForm, setShowForm] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [user, setUser] = useState(auth.currentUser);
   const [storedDates, setStoredDates] = useState<string[]>([]);
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [compareDate, setCompareDate] = useState<string | null>(null);
   const [compareData, setCompareData] = useState<Category[] | null>(null);
   const [progressData, setProgressData] = useState<ProgressData[]>([]);
-  const router = useRouter();
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setUser(user);
-        fetchStoredDates(user.uid);
-      } else {
-        router.push('/login');
-      }
-    });
-
-    return () => unsubscribe();
-  }, [router]);
+    if (user) {
+      fetchStoredDates(user.uid);
+    }
+  }, [user]);
 
   const fetchStoredDates = async (userId: string) => {
     try {
@@ -594,13 +581,9 @@ export default function WheelOfLifePage() {
     </Card>
   );
 
-  if (!user) {
-    return <div>Loading...</div>;
-  }
-
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-gray-50 py-6 md:py-12 px-4">
+      <div className="min-h-screen max-w-[1200px] w-[1000px] mx-auto bg-gray-50 py-6 md:py-12 px-4">
         <div className="max-w-6xl mx-auto space-y-8">
           <div className="space-y-4 text-gray-600">
             <h1 className="text-center text-4xl font-bold text-gray-900">
@@ -636,8 +619,11 @@ export default function WheelOfLifePage() {
               category, use the? to help guide you.
             </p>
             <p>
-              For reference <strong>(0 = Unhappy, 3 = Needs Improvement, 5 = Can
-              improve, 7 = Happy, 10 = Very Happy)</strong>
+              For reference{' '}
+              <strong>
+                (0 = Unhappy, 3 = Needs Improvement, 5 = Can improve, 7 = Happy,
+                10 = Very Happy)
+              </strong>
             </p>
           </div>
 
@@ -712,7 +698,7 @@ export default function WheelOfLifePage() {
 
                     <div className="space-y-8">
                       <div className="flex flex-col lg:flex-row gap-8">
-                        <div className="w-full lg:w-3/4 xl:w-full">
+                        <div className="w-full">
                           {showForm ? (
                             showGoalSetting ? (
                               renderGoalSettingForm()
@@ -720,8 +706,8 @@ export default function WheelOfLifePage() {
                               renderScoresForm()
                             )
                           ) : (
-                            <div className="flex flex-col lg:flex-row gap-8">
-                              <div className="w-full lg:w-3/4 xl:w-full">
+                            <div className="flex flex-col lg:flex-row gap-6">
+                              <div className="w-full xl:w-full">
                                 <DynamicWheelOfLifeChart
                                   currentData={chartData.data}
                                   comparisonData={comparisonChartData}
@@ -742,7 +728,7 @@ export default function WheelOfLifePage() {
                                   </div>
                                 )}
                               </div>
-                              <div className="w-full lg:w-1/4 xl:w-1/3">
+                              <div className="w-full">
                                 <Card>
                                   <CardHeader>
                                     <CardTitle>Goals</CardTitle>
@@ -767,7 +753,7 @@ export default function WheelOfLifePage() {
                           )}
                         </div>
                         {showForm && (
-                          <div className="w-full lg:w-3/4 xl:w-2/3">
+                          <div className="w-full">
                             <DynamicWheelOfLifeChart
                               currentData={chartData.data}
                               comparisonData={comparisonChartData}
