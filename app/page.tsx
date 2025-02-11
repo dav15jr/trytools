@@ -4,11 +4,11 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { useAuth } from '@/contexts/auth-context';
+// import { useAuth } from '@/contexts/auth-context';
 import { motion } from 'framer-motion';
 
 export default function HomePage() {
-  const { user } = useAuth();
+  // const { user } = useAuth();
 
   const toolsData = [
     {
@@ -61,9 +61,9 @@ export default function HomePage() {
                   <Image
                     src={tool.image || '/placeholder.svg'}
                     alt={`${tool.title} Tool`}
-                    layout="fill"
-                    objectFit="cover"
-                    className="transition-transform hover:scale-105"
+                    fill
+                    priority={index === 0}
+                    className="transition-transform hover:scale-105 object-cover"
                   />
                 </div>
               </CardHeader>

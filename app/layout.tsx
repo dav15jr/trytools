@@ -7,6 +7,8 @@ import { HeaderNav } from "@/components/layout/header-nav"
 const geist = Geist({
   subsets: ["latin"],
   variable: "--font-sans",
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
 })
 
 export const metadata: Metadata = {
