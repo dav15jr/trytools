@@ -10,15 +10,7 @@ import {
   TooltipTrigger,
   TooltipContent,
 } from '@/components/ui/tooltip';
-import { Category } from '@/types';
-
-interface GoalFormProps {
-  categories: Category[];
-  error: string | null;
-  onGoalChange: (index: number, value: string) => void;
-  onSubmit: (e: React.FormEvent) => void;
-  onEditScores: () => void;
-}
+import type { GoalFormProps } from '@/lib/types';
 
 export function GoalForm({
   categories,

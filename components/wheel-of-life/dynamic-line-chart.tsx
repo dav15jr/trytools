@@ -10,17 +10,10 @@ import {
   Tooltip,
   Legend,
 } from "chart.js"
+import type { DynamicLineChartProps } from "@/lib/types"
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend)
 
-interface ProgressData {
-  date: string
-  totalScore: number
-}
-
-interface DynamicLineChartProps {
-  data: ProgressData[]
-}
 
 export function DynamicLineChart({ data }: DynamicLineChartProps) {
   const chartData = {

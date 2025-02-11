@@ -1,24 +1,11 @@
 'use client';
 
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
-import { Category } from "@/types";
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
 
-import { CategoryInput } from "./category-input";
-
-interface ScoreFormProps {
-  firstName: string;
-  date: string;
-  categories: Category[];
-  isFormValid: boolean;
-  onFirstNameChange: (value: string) => void;
-  onDateChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onCategoryChange: (index: number, value: string) => void;
-  onSubmit: (e: React.FormEvent) => void;
-  onKeyDown: (event: React.KeyboardEvent<HTMLInputElement>, index: number) => void;
-}
+import { CategoryInput } from './category-input';
+import type { ScoreFormProps } from '@/lib/types';
 
 export function ScoreForm({
   firstName,
@@ -76,4 +63,4 @@ export function ScoreForm({
       </div>
     </form>
   );
-} 
+}

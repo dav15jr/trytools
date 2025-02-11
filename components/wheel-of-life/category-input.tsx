@@ -1,17 +1,15 @@
 'use client';
 
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
-import { Category } from "@/types";
-
-interface CategoryInputProps {
-  category: Category;
-  index: number;
-  onChange: (index: number, value: string) => void;
-  onKeyDown: (event: React.KeyboardEvent<HTMLInputElement>, index: number) => void;
-}
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
+import {
+  TooltipProvider,
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+} from '@/components/ui/tooltip';
+import type { CategoryInputProps } from '@/lib/types';
 
 export function CategoryInput({
   category,
@@ -55,4 +53,4 @@ export function CategoryInput({
       />
     </div>
   );
-} 
+}

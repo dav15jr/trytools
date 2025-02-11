@@ -1,13 +1,10 @@
 import { Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-import type { ChartData } from '@/types';
+import type { DynamicPieChartProps } from '@/lib/types';
 
 ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels);
 
-interface DynamicPieChartProps {
-  data: ChartData[];
-}
 
 export function DynamicPieChart({ data }: DynamicPieChartProps) {
   const chartData = {
@@ -38,7 +35,7 @@ export function DynamicPieChart({ data }: DynamicPieChartProps) {
           const percentage = ((value / total) * 100).toFixed(0);
           return `${
             context.chart.data.labels[context.dataIndex]
-          }: ${percentage}%`
+          }: ${percentage}%`;
         },
       },
       tooltip: {
@@ -59,8 +56,8 @@ export function DynamicPieChart({ data }: DynamicPieChartProps) {
   };
 
   return (
-    <div className="w-full flex justify-center">
-  <Pie data={chartData} options={options} />
-</div>
-)
+    <div className="flex justify-center">
+      <Pie data={chartData} options={options} />
+    </div>
+  );
 }

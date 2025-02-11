@@ -8,18 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-
-interface WheelControlsProps {
-  storedDates: string[];
-  selectedDate: string | null;
-  compareDate: string | null;
-  onDateSelect: (value: string) => void;
-  onLoadWheel: () => void;
-  onCompareSelect: (value: string) => void;
-  onCompare: () => void;
-  onCreateNew: () => void;
-  showForm: boolean;
-}
+import type { WheelControlsProps } from '@/lib/types';
 
 export function WheelControls({
   storedDates,

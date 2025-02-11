@@ -9,19 +9,9 @@ import {
 } from 'chart.js';
 import { PolarArea } from 'react-chartjs-2';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-
+import type { WheelOfLifeChartProps } from '@/lib/types';
 ChartJS.register(RadialLinearScale, ArcElement, Tooltip, Legend);
 
-interface WheelOfLifeChartProps {
-  currentData: number[];
-  comparisonData?: number[];
-  labels: string[];
-  fullWidth?: boolean;
-  currentTotalScore: number;
-  comparisonTotalScore?: number;
-  currentDate: string;
-  comparisonDate?: string;
-}
 
 export function WheelOfLifeChart({
   currentData,

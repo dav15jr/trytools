@@ -2,23 +2,9 @@
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Category } from '@/types';
+import { Category } from '@/lib/types';
 import { WheelOfLifeChart } from './wheel-of-life-chart';
-
-interface ChartSectionProps {
-  chartData: {
-    data: number[];
-    labels: string[];
-  };
-  comparisonChartData?: number[];
-  totalScore: number;
-  comparisonTotalScore?: number;
-  currentDate: string;
-  compareDate?: string;
-  compareData?: Category[] | null;
-  categories: Category[];
-  onRemoveComparison: () => void;
-}
+import type { ChartSectionProps } from '@/lib/types';
 
 export function ChartSection({
   chartData,

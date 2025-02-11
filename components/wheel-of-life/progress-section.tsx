@@ -2,11 +2,7 @@
 
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { DynamicLineChart } from './dynamic-line-chart';
-import { ProgressData } from '@/types';
-
-interface ProgressSectionProps {
-  progressData: ProgressData[];
-}
+import type { ProgressSectionProps } from '@/lib/types';
 
 export function ProgressSection({ progressData }: ProgressSectionProps) {
   return (

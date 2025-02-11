@@ -8,13 +8,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Checkbox } from "@/components/ui/checkbox"
 import { collection, addDoc, getDocs, deleteDoc, doc, updateDoc } from "firebase/firestore"
 import { db, auth } from "@/lib/firebase"
+import type { Habit } from "@/lib/types"
 
-interface Habit {
-  id: string
-  name: string
-  category: string
-  completed: boolean
-}
 
 export function HabitTracker() {
   const [habits, setHabits] = useState<Habit[]>([])

@@ -1,19 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-
-interface PlannerSummaryProps {
-  data: {
-    HLV: number
-    HDV: number
-    LDV: number
-    ZV: number
-  }
-  activities: {
-    "HIGH LIFE TIME (HLV)": { name: string }[]
-    "HIGH DOLLAR (HDV)": { name: string }[]
-    "LOW DOLLAR (LDV)": { name: string }[]
-    "ZERO VALUE (ZV)": { name: string }[]
-  }
-}
+import type { PlannerSummaryProps } from "@/lib/types"
 
 export function PlannerSummary({ data, activities }: PlannerSummaryProps) {
   const totalHours = Object.values(data).reduce((sum, value) => sum + value, 0)

@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useEffect } from 'react';
 
-import { Card, CardContent} from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import ProtectedRoute from '@/components/auth/protected-route';
@@ -18,7 +18,7 @@ import {
   orderBy,
   limit,
 } from 'firebase/firestore';
-import type { Category, ProgressData } from '@/types';
+import type { Category, ProgressData } from '@/lib/types';
 import { useAuth } from '@/contexts/auth-context';
 import { Instructions } from '@/components/wheel-of-life/instructions';
 import { ScoreForm } from '@/components/wheel-of-life/score-form';
@@ -49,14 +49,12 @@ const DynamicHabitTracker = dynamic(
 
 export default function WheelOfLifePage() {
   const { user } = useAuth();
-  // const router = useRouter();
   const [firstName, setFirstName] = useState('');
   const [date, setDate] = useState('');
   const [convDate, setConvDate] = useState('');
   const [formDate, setFormDate] = useState('');
   const [categories, setCategories] = useState<Category[]>(initialCategories);
   const [showGoalForm, setShowGoalForm] = useState(false);
-  const [showScoreForm, setShowScoreForm] = useState(true);
   const [showForm, setShowForm] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [storedDates, setStoredDates] = useState<string[]>([]);
@@ -144,7 +142,6 @@ export default function WheelOfLifePage() {
   const handleScoreSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setShowGoalForm(true);
-    setShowScoreForm(false);
     setConvDate(formDate);
   };
 
@@ -184,17 +181,8 @@ export default function WheelOfLifePage() {
   };
 
   const handleEditScores = () => {
-    setShowScoreForm(true);
     setShowGoalForm(false);
-    console.log('showScoreForm changed to:', showScoreForm);
-    console.log('showGoalForm changed to:', showGoalForm);
   };
-
-  // Add this useEffect to monitor state changes
-  useEffect(() => {
-    console.log('showGoalForm changed to:', showGoalForm);
-    console.log('showScoreForm changed to:', showScoreForm);
-  }, [showGoalForm, showScoreForm]);
 
   const handleKeyDown = (
     event: React.KeyboardEvent<HTMLInputElement>,
@@ -218,7 +206,6 @@ export default function WheelOfLifePage() {
     setCategories(initialCategories);
     setShowForm(true);
     setShowGoalForm(false);
-    setShowScoreForm(true);
     setSelectedDate(null);
     setCompareDate(null);
     setCompareData(null);
@@ -244,7 +231,6 @@ export default function WheelOfLifePage() {
         setCategories(loadedCategories);
         setFirstName(data.firstName || '');
         setConvDate(data.convDate || selectedDate);
-        setDate(data.date || selectedDate);
         setShowForm(false);
         setCompareData(null);
         setCompareDate(null);
@@ -387,7 +373,7 @@ export default function WheelOfLifePage() {
                       <div className="flex flex-col lg:flex-row gap-8">
                         <div className="w-full">
                           {showForm ? (
-                            showGoalForm && !showScoreForm ? (
+                            showGoalForm ? (
                               <GoalForm
                                 categories={categories}
                                 error={error}
@@ -408,7 +394,7 @@ export default function WheelOfLifePage() {
                                 onFirstNameChange={setFirstName}
                                 onDateChange={onChangeDate}
                                 onCategoryChange={(index, value) => {
-                                                                    if (
+                                  if (
                                     value === '' ||
                                     (Number.parseFloat(value) >= 0 &&
                                       Number.parseFloat(value) <= 10)

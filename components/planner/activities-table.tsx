@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, type React } from "react"
+import { useState, useEffect} from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Table, TableBody, TableCell, TableHead, TableRow, TableHeader } from "@/components/ui/table"
@@ -13,33 +13,8 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-
-interface Activity {
-  name: string
-}
-
-interface GroupedActivities {
-  "HIGH LIFE TIME (HLV)": Activity[]
-  "HIGH DOLLAR (HDV)": Activity[]
-  "LOW DOLLAR (LDV)": Activity[]
-  "ZERO VALUE (ZV)": Activity[]
-}
-
-const categoryColors = {
-  "HIGH LIFE TIME (HLV)": "bg-green-600",
-  "HIGH DOLLAR (HDV)": "bg-blue-600",
-  "LOW DOLLAR (LDV)": "bg-sky-400",
-  "ZERO VALUE (ZV)": "bg-orange-500",
-}
-
-interface ActivitiesTableProps {
-  activities: GroupedActivities
-  setActivities: React.Dispatch<React.SetStateAction<GroupedActivities>>
-  onAddActivity: (updatedActivities: GroupedActivities) => void
-  onDeleteActivity: (updatedActivities: GroupedActivities) => void
-  plannerTitle: string
-  setPlannerTitle: (title: string) => void
-}
+import type { GroupedActivities, ActivitiesTableProps } from "@/lib/types"
+import { categoryColors } from "@/lib/types"
 
 export function ActivitiesTable({
   activities,

@@ -1,5 +1,5 @@
 'use client';
-import { useId } from 'react';
+
 import { v4 as uuidv4 } from 'uuid';
 import { useState, useEffect, useMemo } from 'react';
 import {
@@ -29,39 +29,14 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Label } from '@/components/ui/label';
 import { PrinterIcon as Print } from 'lucide-react';
+import type {
+  ScheduleData,
+  Activity,
+  WeeklyScheduleProps,
+  
+} from '@/lib/types';
+import { categoryColors } from '@/lib/types';
 
-const categoryColors = {
-  'HIGH LIFE TIME (HLV)': 'bg-green-600',
-  'HIGH DOLLAR (HDV)': 'bg-blue-600',
-  'LOW DOLLAR (LDV)': 'bg-sky-400',
-  'ZERO VALUE (ZV)': 'bg-orange-500',
-} as const;
-
-interface ScheduleCell {
-  activity: string;
-  category: keyof typeof categoryColors;
-}
-
-type ScheduleData = {
-  [time: string]: {
-    [day: string]: ScheduleCell | null;
-  };
-};
-
-interface Activity {
-  id: string;
-  name: string;
-  category: keyof typeof categoryColors;
-}
-
-interface WeeklyScheduleProps {
-  activities: Activity[];
-  onSave: (schedule: ScheduleData) => void;
-  onLoad: (
-    selectedSchedule: string | null
-  ) => Promise<ScheduleData | null>;
-  savedSchedules: string[];
-}
 
 export function WeeklySchedule({
   activities,
@@ -112,7 +87,7 @@ export function WeeklySchedule({
   }, []);
 
   const loadSchedule = async () => {
-    const loadedSchedule = await onLoad(selectedSchedule || null);
+    const loadedSchedule = await onLoad(selectedSchedule || undefined);
     if (loadedSchedule) {
       setSchedule(loadedSchedule);
     }
@@ -175,8 +150,6 @@ export function WeeklySchedule({
   const handlePrint = () => {
     window.print();
   };
-
-  const id = useId();
 
   return (
     <div className="space-y-4">
@@ -369,7 +342,10 @@ export function WeeklySchedule({
                           <div
                             className={`${
                               schedule[time]?.[day]
-                                ? categoryColors[schedule[time][day].category]
+                                ? categoryColors[
+                                    schedule[time][day]
+                                      .category as keyof typeof categoryColors
+                                  ]
                                 : ''
                             } text-white p-2 text-sm min-h-[40px] transition-colors`}
                           >
