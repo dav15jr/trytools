@@ -74,7 +74,6 @@ export default function PlannerPage() {
     updateProductivityChart();
   }, [activities, weeklySchedule]); //Fixed dependency array
 
-
   const loadStoredPlanners = async () => {
     const user = auth.currentUser;
     if (!user) return;
@@ -226,7 +225,9 @@ export default function PlannerPage() {
                   }))
               )}
               onSave={savePlanner}
-              onLoad={(selectedSchedule?: string) => loadPlanner(selectedSchedule || null)}
+              onLoad={(selectedSchedule?: string) =>
+                loadPlanner(selectedSchedule || null)
+              }
               savedSchedules={storedPlanners}
             />
           </div>

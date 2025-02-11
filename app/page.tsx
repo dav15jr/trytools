@@ -7,8 +7,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { motion } from 'framer-motion';
 
 export default function HomePage() {
-
-
   const toolsData = [
     {
       title: 'Wheel Of Life',
