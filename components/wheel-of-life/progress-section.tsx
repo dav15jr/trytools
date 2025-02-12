@@ -10,8 +10,8 @@ export function ProgressSection({ progressData }: ProgressSectionProps) {
       <CardHeader>
         <CardTitle>Your Progress</CardTitle>
       </CardHeader>
-      <CardContent className="w-full">
-        <div className="w-full">
+      <CardContent className="w-full p-1 sm:p-4">
+        <div className="w-full min-h-[300px]">
           <DynamicLineChart data={progressData} />
         </div>
       </CardContent>

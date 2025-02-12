@@ -19,7 +19,7 @@ export function ScoreForm({
   onKeyDown,
 }: ScoreFormProps) {
   return (
-    <form onSubmit={onSubmit} className="space-y-6">
+    <form onSubmit={onSubmit} id="score-form" className="space-y-6">
       <div className="grid md:grid-cols-2 gap-4">
         <div>
           <Label htmlFor="firstName">First Name</Label>

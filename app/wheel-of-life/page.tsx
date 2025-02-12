@@ -143,6 +143,14 @@ export default function WheelOfLifePage() {
     e.preventDefault();
     setShowGoalForm(true);
     setConvDate(formDate);
+    scrollFormTop();
+  };
+
+  const scrollFormTop = () => {
+    setTimeout(() => {
+      const topForm = document.getElementById('wheel-controls');
+      topForm?.scrollIntoView({ behavior: 'smooth' });
+    }, 100);
   };
 
   const handleGoalSubmit = async (e: React.FormEvent) => {
@@ -182,6 +190,7 @@ export default function WheelOfLifePage() {
 
   const handleEditScores = () => {
     setShowGoalForm(false);
+    scrollFormTop();
   };
 
   const handleKeyDown = (
@@ -342,15 +351,15 @@ export default function WheelOfLifePage() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen max-w-[1200px] w-[1000px] mx-auto bg-gray-50 py-6 md:py-12 px-4">
+      <div className="min-h-screen max-w-[1200px] mx-auto bg-gray-50 py-6 md:py-12 px-4">
         <div className="max-w-6xl mx-auto space-y-8">
           <Instructions />
 
           <Tabs defaultValue="wheel" className="w-full">
-            <TabsList className="grid w-full grid-cols-1 md:grid-cols-3 gap-2">
-              <TabsTrigger value="wheel">Wheel of Life</TabsTrigger>
-              <TabsTrigger value="progress">Progress</TabsTrigger>
-              <TabsTrigger value="habits">Habits</TabsTrigger>
+            <TabsList className="grid w-full grid-cols-3 gap-2 h-full">
+              <TabsTrigger className="p-4 sm:p-2" value="wheel">Wheel of Life</TabsTrigger>
+              <TabsTrigger className="p-4 sm:p-2" value="progress">Progress</TabsTrigger>
+              <TabsTrigger className="p-4 sm:p-2" value="habits">Habits</TabsTrigger>
             </TabsList>
 
             <TabsContent value="wheel">
@@ -442,7 +451,7 @@ export default function WheelOfLifePage() {
               </Card>
             </TabsContent>
 
-            <TabsContent value="progress">
+            <TabsContent value="progress" className="min-h-full">
               <ProgressSection progressData={progressData} />
             </TabsContent>
 

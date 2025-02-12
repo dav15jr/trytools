@@ -75,7 +75,7 @@ export function WheelOfLifeChart({
         },
         pointLabels: {
           display: true,
-          centerPointLabels: false,
+          centerPointLabels: true,
           font: {
             size: 12,
           },

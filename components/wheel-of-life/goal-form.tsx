@@ -20,7 +20,7 @@ export function GoalForm({
   onEditScores,
 }: GoalFormProps) {
   return (
-    <form onSubmit={onSubmit} className="space-y-6">
+    <form onSubmit={onSubmit} id="goal-form" className="space-y-6">
       <div className="grid md:grid-cols-2 gap-4">
         {categories.map((category, index) => (
           <div key={index} className="space-y-2">
@@ -37,6 +37,7 @@ export function GoalForm({
                     <Button
                       type="button"
                       variant="outline"
+                      size= "sm"
                       className="h-5 w-5 rounded-full p-0 text-sm bg-purple-600 text-white hover:bg-purple-700 border-0"
                     >
                       ?

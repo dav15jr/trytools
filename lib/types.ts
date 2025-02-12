@@ -19,10 +19,10 @@ export interface Activity {
 }
 
 export interface GroupedActivities {
-  "HIGH LIFE TIME (HLV)": Activity[]
-  "HIGH DOLLAR (HDV)": Activity[]
-  "LOW DOLLAR (LDV)": Activity[]
-  "ZERO VALUE (ZV)": Activity[]
+  "HIGH LIFE TIME (HLV)": Activity['name'][]
+  "HIGH DOLLAR (HDV)": Activity['name'][]
+  "LOW DOLLAR (LDV)": Activity['name'][]
+  "ZERO VALUE (ZV)": Activity['name'][]
 }
 
 export interface ActivitiesTableProps {

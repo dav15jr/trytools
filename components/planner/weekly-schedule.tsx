@@ -29,14 +29,8 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Label } from '@/components/ui/label';
 import { PrinterIcon as Print } from 'lucide-react';
-import type {
-  ScheduleData,
-  Activity,
-  WeeklyScheduleProps,
-  
-} from '@/lib/types';
+import type { ScheduleData, Activity, WeeklyScheduleProps } from '@/lib/types';
 import { categoryColors } from '@/lib/types';
-
 
 export function WeeklySchedule({
   activities,
@@ -251,7 +245,7 @@ export function WeeklySchedule({
           </div>
         ))}
       </div>
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto min-w-[300px]">
         <div className="inline-block min-w-full align-middle">
           <div className="overflow-hidden border rounded-lg">
             <Table>

@@ -66,7 +66,7 @@ export function HeaderNav() {
       </div>
 
       {/* Logo section */}
-      <div className="container mx-auto px-4 py-8 text-center">
+      <div className="container mx-auto px-4 py-6 text-center">
         <Image
           src="/Tryumph Coaching-header-01-01-01.png"
           alt="Tryumph Coaching Banner"
@@ -99,7 +99,7 @@ export function HeaderNav() {
               } lg:relative lg:bg-transparent lg:space-y-0`}
             >
               {isMenuOpen && (
-                <li className="lg:hidden absolute top-4 right-4">
+                <li className="lg:hidden absolute top-20 right-6">
                   <button
                     onClick={toggleMenu}
                     className="text-gray-600 hover:text-purple-600 transition-colors focus:outline-none"
@@ -132,7 +132,7 @@ export function HeaderNav() {
                   className="flex items-center justify-center text-gray-700 hover:text-purple-600 transition-colors py-2 px-4 rounded-md"
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  TOOLS <ChevronDown className="ml-1 h-4 w-4" />
+                  TOOLS <ChevronDown className="ml-8 sm:ml-2 h-4 w-4"  onClick={() => setIsHovered((prev) => !prev)}/>
                 </Link>
                 {isHovered && (
                   <div className="absolute left-0 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">

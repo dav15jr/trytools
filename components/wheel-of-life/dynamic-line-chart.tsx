@@ -30,6 +30,7 @@ export function DynamicLineChart({ data }: DynamicLineChartProps) {
 
   const options = {
     responsive: true,
+    maintainAspectRatio: false,
     plugins: {
       legend: {
         position: "top" as const,
@@ -47,6 +48,16 @@ export function DynamicLineChart({ data }: DynamicLineChartProps) {
     },
   }
 
-  return <Line data={chartData} options={options} />
+  return (
+    <div className="w-full h-[400px]">
+      <Line 
+        data={chartData} 
+        options={{
+          ...options,
+          maintainAspectRatio: false
+        }} 
+      />
+    </div>
+  );
 }
 

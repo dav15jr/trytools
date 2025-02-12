@@ -178,7 +178,7 @@ export default function PlannerPage() {
 
   return (
     <ProtectedRoute>
-      <div className="container mx-auto px-4 py-6 md:py-8">
+      <div className="container mx-auto px-4 py-6 md:py-8 min-w-[300px]">
         <Card className="mb-8">
           <CardHeader>
             <CardTitle className="text-2xl font-bold">

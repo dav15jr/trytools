@@ -22,10 +22,10 @@ export function WheelControls({
   showForm,
 }: WheelControlsProps) {
   return (
-    <div className="flex flex-wrap justify-between items-center gap-4">
-      <div className="flex items-center space-x-4">
+    <div className="flex flex-wrap justify-between items-center gap-4" id='wheel-controls' >
+      <div className="flex mx-auto sm:mx-0 space-x-4">
         <Select onValueChange={onDateSelect} value={selectedDate || undefined}>
-          <SelectTrigger className="w-[180px]">
+          <SelectTrigger className="w-[140px] h-12">
             <SelectValue placeholder="Select date" />
           </SelectTrigger>
           <SelectContent>
@@ -36,21 +36,23 @@ export function WheelControls({
             ))}
           </SelectContent>
         </Select>
-        <Button onClick={onLoadWheel} disabled={!selectedDate}>
+        <Button onClick={onLoadWheel} disabled={!selectedDate} >
           Load Wheel
         </Button>
       </div>
       {!showForm && (
-        <Button onClick={onCreateNew} variant="outline">
+        <div className="mx-auto">
+        <Button onClick={onCreateNew} variant="secondary">
           Create New Wheel
         </Button>
+        </div>
       )}
-      <div className="flex items-center space-x-4">
+      <div className="flex mx-auto sm:mx-0 space-x-4">
         <Select
           onValueChange={onCompareSelect}
           value={compareDate || undefined}
         >
-          <SelectTrigger className="w-[180px]">
+          <SelectTrigger className="w-[140px] h-12">
             <SelectValue placeholder="Compare with" />
           </SelectTrigger>
           <SelectContent>
@@ -63,7 +65,7 @@ export function WheelControls({
               ))}
           </SelectContent>
         </Select>
-        <Button onClick={onCompare} disabled={!selectedDate || !compareDate}>
+        <Button onClick={onCompare} className="px-8" disabled={!selectedDate || !compareDate} >
           Compare
         </Button>
       </div>

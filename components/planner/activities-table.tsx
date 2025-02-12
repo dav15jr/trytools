@@ -35,6 +35,7 @@ export function ActivitiesTable({
     setActivities(activities)
   }, [activities, setActivities])
 
+  
   const addActivity = () => {
     if (!newActivity.trim()) return
 
@@ -59,7 +60,7 @@ export function ActivitiesTable({
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-col md:flex-row gap-4 mb-4">
+      <div className="flex flex-col gap-6 md:flex-row md:gap-4 mb-4">
         <Input
           placeholder="Planner name"
           value={plannerTitle}
@@ -76,7 +77,7 @@ export function ActivitiesTable({
           value={selectedCategory}
           onValueChange={(value) => setSelectedCategory(value as keyof GroupedActivities)}
         >
-          <SelectTrigger className="w-[200px]">
+          <SelectTrigger className="w-full sm:w-[200px] p-6">
             <SelectValue placeholder="Select category" />
           </SelectTrigger>
           <SelectContent>
@@ -114,6 +115,7 @@ export function ActivitiesTable({
                         <Dialog>
                           <DialogTrigger asChild>
                             <Button
+                              className="font-bold text-xl sm:text-sm"
                               variant="ghost"
                               size="sm"
                               onClick={() => setDeleteConfirmation({ category, index })}

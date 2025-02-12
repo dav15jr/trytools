@@ -27,7 +27,8 @@ export function CategoryInput({
               <Button
                 type="button"
                 variant="outline"
-                className="h-5 w-5 rounded-full p-0 text-sm bg-purple-600 text-white hover:bg-purple-700 border-0"
+                size= "sm"
+                className="h-6 w-6 rounded-full p-0 text-sm bg-purple-600 text-white hover:bg-purple-700 border-0"
               >
                 ?
               </Button>
