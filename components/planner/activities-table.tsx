@@ -1,8 +1,10 @@
 "use client"
 
 import { useState, useEffect} from "react"
+import { categoryColors } from "@/lib/types"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Table, TableBody, TableCell, TableHead, TableRow, TableHeader } from "@/components/ui/table"
 import {
   Dialog,
@@ -12,9 +14,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import type { ActivitiesTableProps, GroupedActivities } from "@/lib/types"
-import { categoryColors } from "@/lib/types"
 
 export function ActivitiesTable({
   activities,
@@ -64,19 +64,19 @@ export function ActivitiesTable({
           placeholder="Planner name"
           value={plannerTitle}
           onChange={(e) => setPlannerTitle(e.target.value)}
-          className="max-w-xs"
+          className="w-full sm:w-[250px] sm:max-w-sm"
         />
         <Input
           placeholder="New activity"
           value={newActivity}
           onChange={(e) => setNewActivity(e.target.value)}
-          className="max-w-xs"
+          className="w-full sm:w-[250px] max-w-xs"
         />
         <Select
           value={selectedCategory}
           onValueChange={(value) => setSelectedCategory(value as keyof GroupedActivities)}
         >
-          <SelectTrigger className="w-full sm:w-[200px] p-6">
+          <SelectTrigger className="w-full sm:w-[250px] p-6 sm:p-2">
             <SelectValue placeholder="Select category" />
           </SelectTrigger>
           <SelectContent>
@@ -96,7 +96,7 @@ export function ActivitiesTable({
               {Object.keys(activities).map((category) => (
                 <TableHead
                   key={category}
-                  className={`${categoryColors[category as keyof GroupedActivities]} text-white`}
+                  className={`${categoryColors[category as keyof GroupedActivities]} text-white min-w-[125px]`}
                 >
                   {category}
                 </TableHead>
@@ -109,12 +109,12 @@ export function ActivitiesTable({
                 {(Object.keys(activities) as Array<keyof GroupedActivities>).map((category) => (
                   <TableCell key={category}>
                     {activities[category][index] && (
-                      <div className="flex items-center justify-between gap-2">
+                      <div className="flex items-center justify-between gap-4 sm:gap-2">
                         <span>{activities[category][index].name}</span>
                         <Dialog>
                           <DialogTrigger asChild>
                             <Button
-                              className="font-bold text-xl sm:text-sm"
+                              className="font-bold text-xl p-0 m-0"
                               variant="ghost"
                               size="sm"
                               onClick={() => setDeleteConfirmation({ category, index })}

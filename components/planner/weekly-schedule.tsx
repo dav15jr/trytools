@@ -146,14 +146,14 @@ export function WeeklySchedule({
   };
 
   return (
-    <div className="space-y-4">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
-        <div className="flex flex-col md:flex-row items-start md:items-center space-y-2 md:space-y-0 md:space-x-2">
+    <div className="space-y-4 print-component">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4 no-print">
+        <div className="flex flex-row items-center justify-between space-y-0 space-x-4">
           <Select
             onValueChange={setSelectedSchedule}
             value={selectedSchedule || undefined}
           >
-            <SelectTrigger className="w-[200px]">
+            <SelectTrigger className="w-[150px] p-6 sm:p-2">
               <SelectValue placeholder="Select schedule" />
             </SelectTrigger>
             <SelectContent>
@@ -168,15 +168,15 @@ export function WeeklySchedule({
             Load Schedule
           </Button>
         </div>
-        <div className="flex flex-col md:flex-row items-start md:items-center space-y-2 md:space-y-0 md:space-x-2">
+        <div className="flex flex-row items-start md:items-center space-x-4">
           <Button onClick={() => onSave(schedule)}>Save Schedule</Button>
           <Button onClick={handlePrint} variant="outline">
-            <Print className="mr-2 h-4 w-4" /> Print Schedule
+            <Print className="mr-1 h-4 w-4" /> Print Schedule
           </Button>
         </div>
       </div>
-      <div className="flex flex-wrap justify-between items-center gap-4">
-        <div className="flex items-center space-x-2">
+      <div className="flex flex-wrap justify-between items-center gap-3 pb-8 no-print">
+        <div className="flex items-center space-x-2 mx-auto sm:mx-0 my-6 sm:my-0">
           <Checkbox
             id="include-weekends"
             checked={includeWeekends}
@@ -191,9 +191,11 @@ export function WeeklySchedule({
             Include Weekends
           </Label>
         </div>
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-3">
+        <div className="flex flex-col">
+        <Label htmlFor="startTime" className="mb-1">Day Start</Label>
           <Select onValueChange={setStartTime} value={startTime}>
-            <SelectTrigger className="w-[100px]">
+            <SelectTrigger className="w-[85px]" id='startTime'>
               <SelectValue placeholder="Start Time" />
             </SelectTrigger>
             <SelectContent>
@@ -207,9 +209,12 @@ export function WeeklySchedule({
               ))}
             </SelectContent>
           </Select>
-          <span>to</span>
+          </div>
+        
+          <div className="flex flex-col">
+          <Label htmlFor="endTime" className="mb-1">Day End</Label>
           <Select onValueChange={setEndTime} value={endTime}>
-            <SelectTrigger className="w-[100px]">
+            <SelectTrigger className="w-[85px]" id='endTime'>
               <SelectValue placeholder="End Time" />
             </SelectTrigger>
             <SelectContent>
@@ -223,10 +228,13 @@ export function WeeklySchedule({
               ))}
             </SelectContent>
           </Select>
+          </div>
         </div>
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center">
+          <div className="flex flex-col">
+          <Label htmlFor="blockSize" className="mb-1">Time Block Size</Label>
           <Select onValueChange={setBlockSize} value={blockSize}>
-            <SelectTrigger className="w-[120px]">
+            <SelectTrigger className="w-[125px]" id='blockSize'>
               <SelectValue placeholder="Block Size" />
             </SelectTrigger>
             <SelectContent>
@@ -235,17 +243,18 @@ export function WeeklySchedule({
               <SelectItem value="60">1 hour</SelectItem>
             </SelectContent>
           </Select>
+          </div>
         </div>
       </div>
-      <div className="flex flex-wrap justify-end space-x-4">
+      <div className="flex flex-wrap justify-between sm:justify-end space-x-4 no-print">
         {Object.entries(categoryColors).map(([category, color]) => (
-          <div key={category} className="flex items-center">
+          <div key={category} className="flex items-center mt-1">
             <div className={`w-4 h-4 ${color} mr-2`}></div>
-            <span className="text-sm">{category}</span>
+            <span className="text-xs sm:text-sm">{category}</span>
           </div>
         ))}
       </div>
-      <div className="overflow-x-auto min-w-[300px]">
+      <div className="overflow-x-auto">
         <div className="inline-block min-w-full align-middle">
           <div className="overflow-hidden border rounded-lg">
             <Table>
@@ -277,7 +286,7 @@ export function WeeklySchedule({
                                 <Select>
                                   <SelectValue
                                     className="w-48"
-                                    placeholder="Select activity and duration"
+                                    placeholder="Select activity"
                                   />
                                 </Select>
                               </DropdownMenuTrigger>

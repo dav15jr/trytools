@@ -9,6 +9,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import type { WheelControlsProps } from '@/lib/types';
+import { Label } from '@radix-ui/react-label';
 
 export function WheelControls({
   storedDates,
@@ -26,7 +27,7 @@ export function WheelControls({
       <div className="flex mx-auto sm:mx-0 space-x-4">
         <Select onValueChange={onDateSelect} value={selectedDate || undefined}>
           <SelectTrigger className="w-[140px] h-12">
-            <SelectValue placeholder="Select date" />
+            <SelectValue id="date" placeholder="Select date"/>
           </SelectTrigger>
           <SelectContent>
             {storedDates.map((date) => (

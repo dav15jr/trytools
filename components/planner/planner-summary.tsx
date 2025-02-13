@@ -6,7 +6,7 @@ export function PlannerSummary({ data, activities }: PlannerSummaryProps) {
   const mostFrequentCategory = Object.entries(data).reduce((a, b) => (a[1] > b[1] ? a : b))[0]
 
   return (
-    <Card>
+    <Card className="print-component">
       <CardHeader>
         <CardTitle>Planner Summary</CardTitle>
       </CardHeader>
@@ -16,15 +16,20 @@ export function PlannerSummary({ data, activities }: PlannerSummaryProps) {
             <strong>Total Planned Hours:</strong> {totalHours}
           </p>
           <p>
-            <strong>Most Frequent Category:</strong> {mostFrequentCategory}
+            <strong>Most Frequent Category:</strong> {totalHours === 0 ? 'N/A' : mostFrequentCategory}
           </p>
           <p>
             <strong>Total Activities:</strong>{" "}
             {Object.values(activities).reduce((sum, category) => sum + category.length, 0)}
           </p>
           <p>
-            <strong>Productivity Score:</strong>{" "}
-            {((data.HLV * 4 + data.HDV * 3 + data.LDV * 2 + data.ZV * 1) / totalHours).toFixed(2)} / 4
+            <strong>Productivity Score:</strong>{" "} {
+              totalHours === 0 ? 'N/A' : (
+                <>
+                  {((data.HLV * 4 + data.HDV * 3 + data.LDV * 2 + data.ZV * 1) / totalHours).toFixed(2)} / 4
+                </>
+              )
+            }
           </p>
         </div>
       </CardContent>

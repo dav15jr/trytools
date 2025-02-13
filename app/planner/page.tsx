@@ -178,8 +178,8 @@ export default function PlannerPage() {
 
   return (
     <ProtectedRoute>
-      <div className="container mx-auto px-4 py-6 md:py-8 min-w-[300px]">
-        <Card className="mb-8">
+      <div className="container mx-auto px-4 py-6 md:py-8 min-w-[300px] max-w-[1400px]">
+        <Card className="mb-8 no-print">
           <CardHeader>
             <CardTitle className="text-2xl font-bold">
               Productivity Planner
@@ -193,8 +193,8 @@ export default function PlannerPage() {
           </CardContent>
         </Card>
 
-        <div className="grid lg:grid-cols-4 gap-4 md:gap-6 mb-6">
-          <div className="lg:col-span-3">
+        <div className=" gap-4 md:gap-6 mb-6 no-print">
+          <div className="">
             <Card>
               <CardContent className="p-4">
                 <DynamicActivitiesTable
@@ -209,9 +209,9 @@ export default function PlannerPage() {
             </Card>
           </div>
         </div>
-
-        <div className="grid lg:grid-cols-4 gap-6">
-          <div className="lg:col-span-3">
+        <div className="print-container">
+        <div className="flex flex-col lg:flex-row gap-6">
+          <div className="w-full md:w-4/5">
             <div className="mb-4 text-center">
               <h2 className="text-2xl md:text-4xl font-bold">{plannerTitle}</h2>
             </div>
@@ -231,12 +231,13 @@ export default function PlannerPage() {
               savedSchedules={storedPlanners}
             />
           </div>
-          <div className="space-y-6">
+          <div className="space-y-6 w-full md:w-1/5 ">
             <DynamicProductivityChart data={productivityData} />
             <DynamicPlannerSummary
               data={productivityData}
               activities={activities}
             />
+            </div>
           </div>
         </div>
       </div>

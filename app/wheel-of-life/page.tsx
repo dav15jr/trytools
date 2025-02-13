@@ -351,8 +351,8 @@ export default function WheelOfLifePage() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen max-w-[1200px] mx-auto bg-gray-50 py-6 md:py-12 px-4">
-        <div className="max-w-6xl mx-auto space-y-8">
+      <div className="bg-gray-50 py-6 md:py-12 px-4">
+        <div className="min-h-screen max-w-6xl mx-auto space-y-8">
           <Instructions />
 
           <Tabs defaultValue="wheel" className="w-full">

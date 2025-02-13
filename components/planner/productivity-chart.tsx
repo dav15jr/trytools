@@ -32,12 +32,12 @@ export function ProductivityChart({ data }: ProductivityChartProps) {
   const totalHours  = (Object.values(data) as number[]).reduce((sum, value) => sum + value, 0);
 
   return (
-    <Card>
+    <Card className="print-component">
       <CardHeader>
         <CardTitle>Week Productivity</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="h-[250x] mb-3">
+        <div className="mb-3">
           {isMounted && <DynamicPieChart data={productivityChartData} />}
         </div>
         <Table>
@@ -53,9 +53,12 @@ export function ProductivityChart({ data }: ProductivityChartProps) {
                   {item.name === 'LDV' && 'LOW DOLLAR'}
                   {item.name === 'ZV' && 'ZERO DOLLAR'}
                 </TableCell>
-                <TableCell className="text-right">
-                  {Math.round(item.value)} hours (
-                  {Math.round((item.value / totalHours ) * 100)}%)
+                <TableCell className="text-right">{item.value === 0 ? '0' : (
+                  <>
+                    {Math.round(item.value)} hours (
+                    {Math.round((item.value / totalHours ) * 100)}%)
+                  </>
+                )}
                 </TableCell>
               </TableRow>
             ))}

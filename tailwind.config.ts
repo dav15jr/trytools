@@ -6,6 +6,12 @@ export default {
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
+  ],  
+  safelist: [
+    'bg-green-600',
+    'bg-blue-600',
+    'bg-sky-400',
+    'bg-orange-500',
   ],
   theme: {
   	extend: {
