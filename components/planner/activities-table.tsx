@@ -13,7 +13,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import type { GroupedActivities, ActivitiesTableProps } from "@/lib/types"
+import type { ActivitiesTableProps, GroupedActivities } from "@/lib/types"
 import { categoryColors } from "@/lib/types"
 
 export function ActivitiesTable({
@@ -35,7 +35,6 @@ export function ActivitiesTable({
     setActivities(activities)
   }, [activities, setActivities])
 
-  
   const addActivity = () => {
     if (!newActivity.trim()) return
 
