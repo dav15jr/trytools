@@ -11,7 +11,7 @@ export function PlannerSummary({ data, activities }: PlannerSummaryProps) {
         <CardTitle>Planner Summary</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="space-y-2">
+        <div className="space-y-2 text-sm sm:text-base">
           <p>
             <strong>Total Planned Hours:</strong> {totalHours}
           </p>

@@ -96,7 +96,7 @@ export function ActivitiesTable({
               {Object.keys(activities).map((category) => (
                 <TableHead
                   key={category}
-                  className={`${categoryColors[category as keyof GroupedActivities]} text-white min-w-[125px]`}
+                  className={`${categoryColors[category as keyof GroupedActivities]} text-white min-w-[120px] text-xs sm:text-base`}
                 >
                   {category}
                 </TableHead>

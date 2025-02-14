@@ -45,7 +45,7 @@ export function ProductivityChart({ data }: ProductivityChartProps) {
             {productivityChartData.map((item) => (
               <TableRow key={item.name}>
                 <TableCell
-                  className="font-medium"
+                  className="font-medium text-sm sm:text-base"
                   style={{ color: item.color }}
                 >
                   {item.name === 'HLV' && 'HIGH LIFE TIME'}
@@ -53,7 +53,7 @@ export function ProductivityChart({ data }: ProductivityChartProps) {
                   {item.name === 'LDV' && 'LOW DOLLAR'}
                   {item.name === 'ZV' && 'ZERO DOLLAR'}
                 </TableCell>
-                <TableCell className="text-right">{item.value === 0 ? '0' : (
+                <TableCell className="text-right text-sm sm:text-base">{item.value === 0 ? '0' : (
                   <>
                     {Math.round(item.value)} hours (
                     {Math.round((item.value / totalHours ) * 100)}%)
@@ -63,8 +63,8 @@ export function ProductivityChart({ data }: ProductivityChartProps) {
               </TableRow>
             ))}
             <TableRow>
-              <TableCell className="font-bold">Total Hours</TableCell>
-              <TableCell className="text-right font-bold">
+              <TableCell className="font-bold text-sm sm:text-base">Total Hours</TableCell>
+              <TableCell className="text-right font-bold text-sm sm:text-base">
                 {totalHours }
               </TableCell>
             </TableRow>

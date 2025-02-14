@@ -27,10 +27,10 @@ export default function RootLayout({
         <AuthProvider>
           <div className="min-h-screen flex flex-col bg-gray-50">
             <HeaderNav />
-            <main className="flex-grow px-4 md:px-0">{children}</main>
+            <main className="flex-grow px-2 md:px-0">{children}</main>
             <footer className="bg-gray-100 py-6 mt-12">
               <div className="container mx-auto px-4 text-center text-gray-600">
-                <p>&copy; 2023 Tryumph Coaching. All rights reserved.</p>
+                <p>&copy; 2025 Tryumph Coaching. All rights reserved.</p>
               </div>
             </footer>
           </div>

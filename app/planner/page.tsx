@@ -185,11 +185,15 @@ export default function PlannerPage() {
               Productivity Planner
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <p className="text-gray-600">
-              Plan your week efficiently by categorizing your activities and
-              visualizing your time allocation.
-            </p>
+          <CardContent className="text-sm sm:text-base">
+            <p className="text-gray-600 mb-1">
+              Transform your life by planning and tracking your daily activities to improve your productivity. Create your weekly planner using the categories below.</p>
+              <p className="text-gray-600 mb-2">Every ones life is different, so you should categorize your activities based on what is important to you.</p>
+              <p  className="text-gray-600 mb-1"><span className="font-bold text-blue-500">High Lifetime Value</span> - activities that improve your life like exercise, learning a new skill, self-development, meditation.</p>
+              <p  className="text-gray-600 mb-1" ><span className="font-bold text-green-500">High Dollar Value</span> - activities that bring in income such as Working or a side hustle, these directly bring money in.</p>
+              <p  className="text-gray-600 mb-1"  ><span className="font-bold text-yellow-500">Low Dollar Value</span> - activities have that save you money, like gardening, learning a new profesional skill.</p>
+            <p  className="text-gray-600 mb-2"><span className="font-bold text-red-500">Zero Value</span> - activities that don't add any value or negatively impact your life, like watching TV, smoking, mindlessly scrolling on social media.</p>
+          <p className="text-gray-600"> For reference you should aim your chart to have HLV 40%, HDV 30%, LDV 20%, ZV 10% for your activities.</p>
           </CardContent>
         </Card>
 

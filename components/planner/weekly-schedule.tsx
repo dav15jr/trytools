@@ -153,7 +153,7 @@ export function WeeklySchedule({
             onValueChange={setSelectedSchedule}
             value={selectedSchedule || undefined}
           >
-            <SelectTrigger className="w-[150px] p-6 sm:p-2">
+            <SelectTrigger className="w-[170px] p-6 sm:p-2">
               <SelectValue placeholder="Select schedule" />
             </SelectTrigger>
             <SelectContent>
@@ -195,7 +195,7 @@ export function WeeklySchedule({
         <div className="flex flex-col">
         <Label htmlFor="startTime" className="mb-1">Day Start</Label>
           <Select onValueChange={setStartTime} value={startTime}>
-            <SelectTrigger className="w-[85px]" id='startTime'>
+            <SelectTrigger className="w-[90px]" id='startTime'>
               <SelectValue placeholder="Start Time" />
             </SelectTrigger>
             <SelectContent>
@@ -214,7 +214,7 @@ export function WeeklySchedule({
           <div className="flex flex-col">
           <Label htmlFor="endTime" className="mb-1">Day End</Label>
           <Select onValueChange={setEndTime} value={endTime}>
-            <SelectTrigger className="w-[85px]" id='endTime'>
+            <SelectTrigger className="w-[90px]" id='endTime'>
               <SelectValue placeholder="End Time" />
             </SelectTrigger>
             <SelectContent>
@@ -293,7 +293,7 @@ export function WeeklySchedule({
                               <DropdownMenuContent className="w-48  bg-gray-200">
                                 <DropdownMenuItem>
                                   <Select onValueChange={handleActivitySelect}>
-                                    <SelectTrigger className="w-full border-0 text-sm">
+                                    <SelectTrigger className="w-full border-0 text-sm sm:text-base">
                                       <SelectValue placeholder="Select activity" />
                                     </SelectTrigger>
                                     <SelectContent key={`${uuidv4()}`}>
@@ -321,7 +321,7 @@ export function WeeklySchedule({
                                 </DropdownMenuItem>
                                 <DropdownMenuItem>
                                   <Select onValueChange={handleDurationSelect}>
-                                    <SelectTrigger className="w-full border-0 text-sm">
+                                    <SelectTrigger className="w-full border-0 text-sm sm:text-base">
                                       <SelectValue placeholder="Select duration" />
                                     </SelectTrigger>
                                     <SelectContent className="w-48">
