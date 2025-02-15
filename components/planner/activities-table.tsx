@@ -1,11 +1,24 @@
-"use client"
+'use client';
 
-import { useState, useEffect} from "react"
-import { categoryColors } from "@/lib/types"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Table, TableBody, TableCell, TableHead, TableRow, TableHeader } from "@/components/ui/table"
+import { useState, useEffect } from 'react';
+import { categoryColors } from '@/lib/types';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  TableHeader,
+} from '@/components/ui/table';
 import {
   Dialog,
   DialogContent,
@@ -13,8 +26,8 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
-import type { ActivitiesTableProps, GroupedActivities } from "@/lib/types"
+} from '@/components/ui/dialog';
+import type { ActivitiesTableProps, GroupedActivities } from '@/lib/types';
 
 export function ActivitiesTable({
   activities,
@@ -24,38 +37,43 @@ export function ActivitiesTable({
   plannerTitle,
   setPlannerTitle,
 }: ActivitiesTableProps) {
-  const [newActivity, setNewActivity] = useState("")
-  const [selectedCategory, setSelectedCategory] = useState<keyof GroupedActivities>("HIGH LIFE TIME (HLV)")
+  const [newActivity, setNewActivity] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState<
+    keyof GroupedActivities
+  >('HIGH LIFE TIME (HLV)');
   const [deleteConfirmation, setDeleteConfirmation] = useState<{
-    category: keyof GroupedActivities
-    index: number
-  } | null>(null)
+    category: keyof GroupedActivities;
+    index: number;
+  } | null>(null);
 
   useEffect(() => {
-    setActivities(activities)
-  }, [activities, setActivities])
+    setActivities(activities);
+  }, [activities, setActivities]);
 
   const addActivity = () => {
-    if (!newActivity.trim()) return
+    if (!newActivity.trim()) return;
 
     const updatedActivities = {
       ...activities,
-      [selectedCategory]: [...activities[selectedCategory], { name: newActivity.trim() }],
-    }
-    setActivities(updatedActivities)
-    onAddActivity(updatedActivities)
-    setNewActivity("")
-  }
+      [selectedCategory]: [
+        ...activities[selectedCategory],
+        { name: newActivity.trim() },
+      ],
+    };
+    setActivities(updatedActivities);
+    onAddActivity(updatedActivities);
+    setNewActivity('');
+  };
 
   const deleteActivity = (category: keyof GroupedActivities, index: number) => {
     const updatedActivities = {
       ...activities,
       [category]: activities[category].filter((_, i) => i !== index),
-    }
-    setActivities(updatedActivities)
-    onDeleteActivity(updatedActivities)
-    setDeleteConfirmation(null)
-  }
+    };
+    setActivities(updatedActivities);
+    onDeleteActivity(updatedActivities);
+    setDeleteConfirmation(null);
+  };
 
   return (
     <div className="space-y-4">
@@ -74,13 +92,17 @@ export function ActivitiesTable({
         />
         <Select
           value={selectedCategory}
-          onValueChange={(value) => setSelectedCategory(value as keyof GroupedActivities)}
+          onValueChange={(value) =>
+            setSelectedCategory(value as keyof GroupedActivities)
+          }
         >
           <SelectTrigger className="w-full sm:w-[200px] p-6 sm:p-2">
             <SelectValue placeholder="Select category" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="HIGH LIFE TIME (HLV)">High Life Time Value</SelectItem>
+            <SelectItem value="HIGH LIFE TIME (HLV)">
+              High Life Time Value
+            </SelectItem>
             <SelectItem value="HIGH DOLLAR (HDV)">High Dollar Value</SelectItem>
             <SelectItem value="LOW DOLLAR (LDV)">Low Dollar Value</SelectItem>
             <SelectItem value="ZERO VALUE (ZV)">Zero Value</SelectItem>
@@ -90,13 +112,15 @@ export function ActivitiesTable({
       </div>
 
       <div className="overflow-x-auto">
-        <Table>
+        <Table className="border-collapse overflow-hidden rounded-lg">
           <TableHeader>
-            <TableRow>
+            <TableRow className="[&>th:first-child]:rounded-tl-lg [&>th:last-child]:rounded-tr-lg">
               {Object.keys(activities).map((category) => (
                 <TableHead
                   key={category}
-                  className={`${categoryColors[category as keyof GroupedActivities]} text-white min-w-[120px] text-xs sm:text-base`}
+                  className={`${
+                    categoryColors[category as keyof GroupedActivities]
+                  } text-white min-w-[110px] text-xs sm:text-base`}
                 >
                   {category}
                 </TableHead>
@@ -104,10 +128,23 @@ export function ActivitiesTable({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {Array.from({ length: Math.max(...Object.values(activities).map((cat) => cat.length)) }).map((_, index) => (
-              <TableRow key={index}>
-                {(Object.keys(activities) as Array<keyof GroupedActivities>).map((category) => (
-                  <TableCell key={category}>
+            {Array.from({
+              length: Math.max(
+                ...Object.values(activities).map((cat) => cat.length)
+              ),
+            }).map((_, index, array) => (
+              <TableRow
+                key={index}
+                className={`${
+                  index === array.length - 1
+                    ? '[&>td:first-child]:rounded-bl-lg [&>td:last-child]:rounded-br-lg'
+                    : ''
+                }`}
+              >
+                {(
+                  Object.keys(activities) as Array<keyof GroupedActivities>
+                ).map((category) => (
+                  <TableCell key={category} className="border border-gray-200">
                     {activities[category][index] && (
                       <div className="flex items-center justify-between gap-4 sm:gap-2 text-xs sm:text-base">
                         <span>{activities[category][index].name}</span>
@@ -117,7 +154,9 @@ export function ActivitiesTable({
                               className="font-bold text-xl p-0 m-0"
                               variant="ghost"
                               size="sm"
-                              onClick={() => setDeleteConfirmation({ category, index })}
+                              onClick={() =>
+                                setDeleteConfirmation({ category, index })
+                              }
                             >
                               ×
                             </Button>
@@ -126,14 +165,23 @@ export function ActivitiesTable({
                             <DialogHeader>
                               <DialogTitle>Confirm Deletion</DialogTitle>
                               <DialogDescription>
-                                Are you sure you want to delete the activity "{activities[category][index].name}"?
+                                Are you sure you want to delete the activity "
+                                {activities[category][index].name}"?
                               </DialogDescription>
                             </DialogHeader>
                             <div className="flex justify-end space-x-2">
-                              <Button variant="outline" onClick={() => setDeleteConfirmation(null)}>
+                              <Button
+                                variant="outline"
+                                onClick={() =>
+                                  setDeleteConfirmation({ category, index })
+                                }
+                              >
                                 Cancel
                               </Button>
-                              <Button variant="destructive" onClick={() => deleteActivity(category, index)}>
+                              <Button
+                                variant="destructive"
+                                onClick={() => deleteActivity(category, index)}
+                              >
                                 Delete
                               </Button>
                             </div>
@@ -149,6 +197,5 @@ export function ActivitiesTable({
         </Table>
       </div>
     </div>
-  )
+  );
 }
-
