@@ -178,8 +178,8 @@ export default function PlannerPage() {
 
   return (
     <ProtectedRoute>
-      <div className="container mx-auto px-4 py-6 md:py-8 min-w-[300px] max-w-[1400px]">
-        <Card className="mb-8 no-print">
+      <div className="container mx-auto px-4 py-6 md:py-8 min-w-[300px] max-w-[1100px]">
+        <Card className="mb-8 no-print mx-auto" >
           <CardHeader>
             <CardTitle className="text-2xl font-bold">
               Productivity Planner
@@ -197,8 +197,8 @@ export default function PlannerPage() {
           </CardContent>
         </Card>
 
-        <div className=" gap-4 md:gap-6 mb-6 no-print">
-          <div className="">
+        <div className=" gap-4 md:gap-6 mb-6 no-print mx-auto">
+          <div>
             <Card>
               <CardContent className="p-4">
                 <DynamicActivitiesTable
@@ -214,7 +214,7 @@ export default function PlannerPage() {
           </div>
         </div>
         <div className="print-container">
-        <div className="flex flex-col lg:flex-row gap-6">
+        <div className="flex flex-col md:flex-row gap-6">
           <div className="w-full md:w-4/5">
             <div className="mb-4 text-center">
               <h2 className="text-2xl md:text-4xl font-bold">{plannerTitle}</h2>

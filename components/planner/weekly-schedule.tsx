@@ -1,7 +1,7 @@
 'use client';
 
 import { v4 as uuidv4 } from 'uuid';
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, Fragment } from 'react';
 import {
   Table,
   TableBody,
@@ -130,7 +130,11 @@ export function WeeklySchedule({
 
     setSelectedCell(null);
     setSelectedActivity(null);
-    setSelectedDuration(null);
+  };
+
+  const handleCancel = () => {
+    setSelectedCell(null);
+    setSelectedActivity(null);
   };
 
   const groupedActivities = activities.reduce((acc, activity) => {
@@ -192,57 +196,63 @@ export function WeeklySchedule({
           </Label>
         </div>
         <div className="flex items-center space-x-3">
-        <div className="flex flex-col">
-        <Label htmlFor="startTime" className="mb-1">Day Start</Label>
-          <Select onValueChange={setStartTime} value={startTime}>
-            <SelectTrigger className="w-[90px]" id='startTime'>
-              <SelectValue placeholder="Start Time" />
-            </SelectTrigger>
-            <SelectContent>
-              {Array.from({ length: 24 }, (_, i) => i).map((hour) => (
-                <SelectItem
-                  key={hour}
-                  value={`${hour.toString().padStart(2, '0')}:00`}
-                >
-                  {`${hour.toString().padStart(2, '0')}:00`}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          </div>
-        
           <div className="flex flex-col">
-          <Label htmlFor="endTime" className="mb-1">Day End</Label>
-          <Select onValueChange={setEndTime} value={endTime}>
-            <SelectTrigger className="w-[90px]" id='endTime'>
-              <SelectValue placeholder="End Time" />
-            </SelectTrigger>
-            <SelectContent>
-              {Array.from({ length: 24 }, (_, i) => i).map((hour) => (
-                <SelectItem
-                  key={hour}
-                  value={`${hour.toString().padStart(2, '0')}:00`}
-                >
-                  {`${hour.toString().padStart(2, '0')}:00`}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+            <Label htmlFor="startTime" className="mb-1">
+              Day Start
+            </Label>
+            <Select onValueChange={setStartTime} value={startTime}>
+              <SelectTrigger className="w-[90px]" id="startTime">
+                <SelectValue placeholder="Start Time" />
+              </SelectTrigger>
+              <SelectContent>
+                {Array.from({ length: 24 }, (_, i) => i).map((hour) => (
+                  <SelectItem
+                    key={hour}
+                    value={`${hour.toString().padStart(2, '0')}:00`}
+                  >
+                    {`${hour.toString().padStart(2, '0')}:00`}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="flex flex-col">
+            <Label htmlFor="endTime" className="mb-1">
+              Day End
+            </Label>
+            <Select onValueChange={setEndTime} value={endTime}>
+              <SelectTrigger className="w-[90px]" id="endTime">
+                <SelectValue placeholder="End Time" />
+              </SelectTrigger>
+              <SelectContent>
+                {Array.from({ length: 24 }, (_, i) => i).map((hour) => (
+                  <SelectItem
+                    key={hour}
+                    value={`${hour.toString().padStart(2, '0')}:00`}
+                  >
+                    {`${hour.toString().padStart(2, '0')}:00`}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
         </div>
         <div className="flex items-center">
           <div className="flex flex-col">
-          <Label htmlFor="blockSize" className="mb-1">Time Block Size</Label>
-          <Select onValueChange={setBlockSize} value={blockSize}>
-            <SelectTrigger className="w-[125px]" id='blockSize'>
-              <SelectValue placeholder="Block Size" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="15">15 minutes</SelectItem>
-              <SelectItem value="30">30 minutes</SelectItem>
-              <SelectItem value="60">1 hour</SelectItem>
-            </SelectContent>
-          </Select>
+            <Label htmlFor="blockSize" className="mb-1">
+              Time Block Size
+            </Label>
+            <Select onValueChange={setBlockSize} value={blockSize}>
+              <SelectTrigger className="w-[125px]" id="blockSize">
+                <SelectValue placeholder="Block Size" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="15">15 minutes</SelectItem>
+                <SelectItem value="30">30 minutes</SelectItem>
+                <SelectItem value="60">1 hour</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         </div>
       </div>
@@ -280,66 +290,80 @@ export function WeeklySchedule({
                       >
                         {selectedCell?.time === time &&
                         selectedCell?.day === day ? (
-                          <div className="absolute inset-0 z-10">
-                            <DropdownMenu>
-                              <DropdownMenuTrigger className="w-full h-full bg-gray-300">
-                                <Select>
+                          <div
+                            className="absolute inset-0 z-10 min-w-40"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            <div className="flex flex-col gap-2 bg-white p-2 border shadow-lg">
+                              <Select onValueChange={handleActivitySelect}>
+                                <SelectTrigger
+                                  className="w-full text-sm sm:text-base"
+                                >
                                   <SelectValue
-                                    className="w-48"
+                                    
                                     placeholder="Select activity"
                                   />
-                                </Select>
-                              </DropdownMenuTrigger>
-                              <DropdownMenuContent className="w-48  bg-gray-200">
-                                <DropdownMenuItem>
-                                  <Select onValueChange={handleActivitySelect}>
-                                    <SelectTrigger className="w-full border-0 text-sm sm:text-base">
-                                      <SelectValue placeholder="Select activity" />
-                                    </SelectTrigger>
-                                    <SelectContent key={`${uuidv4()}`}>
-                                      {Object.entries(groupedActivities).map(
-                                        ([category, acts]) => (
-                                          <SelectGroup key={`${category}`}>
-                                            <SelectLabel key={`${category}`}>
-                                              {category}
-                                            </SelectLabel>
-                                            {acts.map((activity) => (
-                                              <SelectItem
-                                                key={`${
-                                                  activity.id
-                                                }:${uuidv4()}`}
-                                                value={`${activity.category}:${activity.name}`}
-                                              >
-                                                {activity.name}
-                                              </SelectItem>
-                                            ))}
-                                          </SelectGroup>
-                                        )
-                                      )}
-                                    </SelectContent>
-                                  </Select>
-                                </DropdownMenuItem>
-                                <DropdownMenuItem>
-                                  <Select onValueChange={handleDurationSelect}>
-                                    <SelectTrigger className="w-full border-0 text-sm sm:text-base">
-                                      <SelectValue placeholder="Select duration" />
-                                    </SelectTrigger>
-                                    <SelectContent className="w-48">
-                                      {[15, 30, 60, 90, 120, 180, 240].map(
-                                        (duration) => (
+                                </SelectTrigger>
+                                <SelectContent
+                                  onPointerDownOutside={(e) =>
+                                    e.preventDefault()
+                                  }
+                                >
+                                  {Object.entries(groupedActivities).map(
+                                    ([category, acts]) => (
+                                      <SelectGroup key={category}>
+                                        <SelectLabel>{category}</SelectLabel>
+                                        {acts.map((activity) => (
                                           <SelectItem
-                                            key={duration}
-                                            value={duration.toString()}
+                                            key={activity.id}
+                                            value={`${activity.category}:${activity.name}`}
                                           >
-                                            {duration} minutes
+                                            {activity.name}
                                           </SelectItem>
-                                        )
-                                      )}
-                                    </SelectContent>
-                                  </Select>
-                                </DropdownMenuItem>
-                              </DropdownMenuContent>
-                            </DropdownMenu>
+                                        ))}
+                                      </SelectGroup>
+                                    )
+                                  )}
+                                </SelectContent>
+                              </Select>
+                              {selectedActivity && (
+                                <Select onValueChange={handleDurationSelect}>
+                                  <SelectTrigger
+                                    className="w-full text-sm sm:text-base"
+                                   
+                                  >
+                                    <SelectValue placeholder="Select duration" />
+                                  </SelectTrigger>
+                                  <SelectContent
+                                    onPointerDownOutside={(e) =>
+                                      e.preventDefault()
+                                    }
+                                  >
+                                    {[15, 30, 60, 90, 120, 180, 240].map(
+                                      (duration) => (
+                                        <SelectItem
+                                          key={duration}
+                                          value={duration.toString()}
+                                        >
+                                          {duration} minutes
+                                        </SelectItem>
+                                      )
+                                    )}
+                                  </SelectContent>
+                                </Select>
+                              )}
+                              <Button
+                                variant="ghost"
+                                className="mt-2"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleCancel();
+                                }}
+                          
+                              >
+                                Cancel
+                              </Button>
+                            </div>
                           </div>
                         ) : (
                           <div

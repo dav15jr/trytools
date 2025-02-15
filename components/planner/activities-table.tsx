@@ -76,7 +76,7 @@ export function ActivitiesTable({
           value={selectedCategory}
           onValueChange={(value) => setSelectedCategory(value as keyof GroupedActivities)}
         >
-          <SelectTrigger className="w-full sm:w-[250px] p-6 sm:p-2">
+          <SelectTrigger className="w-full sm:w-[200px] p-6 sm:p-2">
             <SelectValue placeholder="Select category" />
           </SelectTrigger>
           <SelectContent>
@@ -109,7 +109,7 @@ export function ActivitiesTable({
                 {(Object.keys(activities) as Array<keyof GroupedActivities>).map((category) => (
                   <TableCell key={category}>
                     {activities[category][index] && (
-                      <div className="flex items-center justify-between gap-4 sm:gap-2">
+                      <div className="flex items-center justify-between gap-4 sm:gap-2 text-xs sm:text-base">
                         <span>{activities[category][index].name}</span>
                         <Dialog>
                           <DialogTrigger asChild>
