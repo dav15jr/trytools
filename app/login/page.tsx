@@ -28,12 +28,9 @@ export default function LoginPage() {
     e.preventDefault();
     setError('');
     try {
-      console.log('Attempting to sign in with:', email);
       await signIn(email, password);
-      console.log('Sign in successful');
       router.push(callbackUrl);
     } catch (error) {
-      console.error('Login error:', error);
       setError('Invalid email or password. Please try again.');
     }
   };

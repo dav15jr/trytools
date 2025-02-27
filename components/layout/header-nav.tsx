@@ -20,8 +20,8 @@ export function HeaderNav() {
     try {
       await logout();
       router.push('/login');
-    } catch (error) {
-      console.error('Logout error:', error);
+    } catch (error : any) {
+      (`Error loggin out - ${error}: ${error.message}`)
     }
   };
 

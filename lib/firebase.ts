@@ -17,9 +17,3 @@ const app =
 
 export const auth = getAuth(app);
 export const db = getFirestore(app);
-
-// Debug log to check if the API key is being correctly loaded
-console.log(
-  'Firebase API Key:',
-  process.env.NEXT_PUBLIC_API_KEY ? 'Loaded' : 'Not loaded'
-);

@@ -14,7 +14,7 @@ import type { GoalFormProps } from '@/lib/types';
 
 export function GoalForm({
   categories,
-  error,
+  errorAlert,
   onGoalChange,
   onSubmit,
   onEditScores,
@@ -61,9 +61,9 @@ export function GoalForm({
         ))}
       </div>
 
-      {error && (
+      {errorAlert && (
         <Alert variant="destructive">
-          <AlertDescription>{error}</AlertDescription>
+          <AlertDescription>{errorAlert}</AlertDescription>
         </Alert>
       )}
 

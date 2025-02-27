@@ -84,7 +84,8 @@ export default function PlannerPage() {
       const plannerTitles = snapshot.docs.map((doc) => doc.id);
       setStoredPlanners(plannerTitles);
     } catch (error) {
-      console.error('Error loading stored planners:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      alert(`Error loading stored planners: ${error}: ${errorMessage}`);
     }
   };
 
@@ -100,11 +101,12 @@ export default function PlannerPage() {
         title: plannerTitle,
       };
       await setDoc(plannerRef, plannerData);
-      console.log('Planner saved successfully');
+      alert('Planner saved successfully');
       loadStoredPlanners();
       setWeeklySchedule(schedule);
     } catch (error) {
-      console.error('Error saving planner:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      alert(`Error saving planner: ${error}: ${errorMessage}`);
     }
   };
 
@@ -132,7 +134,8 @@ export default function PlannerPage() {
         return plannerData.weeklySchedule;
       }
     } catch (error) {
-      console.error('Error loading planner:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      alert(`Error loading planner: ${error}: ${errorMessage}`);
     }
   };
 

@@ -45,9 +45,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       await signOut(auth)
       setUser(null)
-      console.log("User signed out successfully")
-    } catch (error) {
-      console.error("Error signing out:", error)
+    } catch (error : any) {
+      (`Error signing out - ${error}: ${error.message}`)
       throw error
     }
   }

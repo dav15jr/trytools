@@ -154,7 +154,7 @@ export interface CategoryInputProps {
 
 export interface GoalFormProps {
   categories: Category[]
-  error: string | null
+  errorAlert: string | null
   onGoalChange: (index: number, value: string) => void
   onSubmit: (e: React.FormEvent) => void
   onEditScores: () => void

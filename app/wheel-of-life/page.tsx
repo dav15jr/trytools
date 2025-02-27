@@ -1,9 +1,7 @@
 'use client';
 
 import { useState, useMemo, useEffect } from 'react';
-
 import { Card, CardContent } from '@/components/ui/card';
-
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import ProtectedRoute from '@/components/auth/protected-route';
 import dynamic from 'next/dynamic';
@@ -56,7 +54,7 @@ export default function WheelOfLifePage() {
   const [categories, setCategories] = useState<Category[]>(initialCategories);
   const [showGoalForm, setShowGoalForm] = useState(false);
   const [showForm, setShowForm] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [errorAlert, setErrorAlert] = useState<string | null>(null);
   const [storedDates, setStoredDates] = useState<string[]>([]);
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [compareDate, setCompareDate] = useState<string | null>(null);
@@ -76,7 +74,8 @@ export default function WheelOfLifePage() {
       const dates = querySnapshot.docs.map((doc) => doc.id);
       setStoredDates(dates);
     } catch (error) {
-      console.error('Error fetching stored dates:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      alert(`Error fetching stored dates: ${error}: ${errorMessage}`);
     }
   };
 
@@ -155,9 +154,9 @@ export default function WheelOfLifePage() {
 
   const handleGoalSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
+    setErrorAlert(null);
     if (!user) {
-      setError('You must be logged in to save your goals.');
+      setErrorAlert('You must be logged in to save your goals.');
       return;
     }
 
@@ -179,12 +178,10 @@ export default function WheelOfLifePage() {
         date: convDate,
         ...dataToSave,
       });
-      console.log('Data saved successfully');
       setShowForm(false);
       fetchStoredDates(user.uid);
     } catch (error: any) {
-      console.error('Error saving data:', error);
-      setError(`Error saving data: ${error.message}`);
+      setErrorAlert(`Error saving data: ${error.message}`);
     }
   };
 
@@ -244,11 +241,10 @@ export default function WheelOfLifePage() {
         setCompareData(null);
         setCompareDate(null);
       } else {
-        setError('No data found for the selected date');
+        setErrorAlert('No data found for the selected date');
       }
     } catch (error: any) {
-      console.error('Error loading data:', error);
-      setError(`Error loading data: ${error.message}`);
+      setErrorAlert(`Error loading data: ${error.message}`);
     }
   };
 
@@ -272,11 +268,11 @@ export default function WheelOfLifePage() {
         setCompareData(loadedCategories);
         setCompareDate(compareDate);
       } else {
-        setError('No data found for the comparison date');
+        setErrorAlert('No data found for the comparison date');
       }
     } catch (error: any) {
-      console.error('Error loading comparison data:', error);
-      setError(`Error loading comparison data: ${error.message}`);
+      
+      setErrorAlert(`Error loading comparison data: ${error.message}`);
     }
   };
 
@@ -338,9 +334,10 @@ export default function WheelOfLifePage() {
       });
 
       setProgressData(sortedData);
-    } catch (error) {
-      console.error('Error fetching progress data:', error);
+    } catch (error : any) {
+      setErrorAlert(`Error fetching progress data - ${error}: ${error.message}`);
     }
+
   };
 
   useEffect(() => {
@@ -385,7 +382,7 @@ export default function WheelOfLifePage() {
                             showGoalForm ? (
                               <GoalForm
                                 categories={categories}
-                                error={error}
+                                errorAlert={errorAlert}
                                 onGoalChange={(index, value) => {
                                   const newCategories = [...categories];
                                   newCategories[index].goal = value;
