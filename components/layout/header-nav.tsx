@@ -48,14 +48,14 @@ export function HeaderNav() {
           {/* Social media icons */}
           <div className="flex gap-4 items-center justify-center flex-grow">
             <Link
-              href="https://instagram.com"
+              href="https://www.instagram.com/tryumphcoaching/"
               target="_blank"
               className="text-gray-600 hover:text-purple-600 transition-colors"
             >
               <Instagram className="w-5 h-5" />
             </Link>
             <Link
-              href="https://youtube.com"
+              href="https://www.youtube.com/channel/UCQrSFWWbR3VcitIKnrrBkvw/featured"
               target="_blank"
               className="text-gray-600 hover:text-purple-600 transition-colors"
             >
@@ -92,7 +92,7 @@ export function HeaderNav() {
               )}
             </button>
             <ul
-              className={`lg:flex lg:items-center justify-center w-full gap-4 py-4 ${
+              className={`lg:flex lg:items-center font-semibold justify-center w-full gap-4 py-4 ${
                 isMenuOpen
                   ? 'fixed inset-0 bg-white z-50 flex flex-col items-center justify-center space-y-4'
                   : 'hidden'
@@ -108,60 +108,44 @@ export function HeaderNav() {
                   </button>
                 </li>
               )}
-              {['COACHING PACKAGES', 'BOOKING', 'CONTACT US', 'ABOUT'].map(
-                (item, index) => (
-                  <li key={index} className="text-center">
+             
+                  <li className="text-center">
                     <Link
-                      href={`/${item.toLowerCase().replace(' ', '-')}`}
+                      href={'/'}
                       className="block text-gray-700 hover:text-purple-600 transition-colors py-2 px-4 rounded-md"
                       onClick={() => setIsMenuOpen(false)}
                     >
-                      {item}
+                      HOME
                     </Link>
                   </li>
-                )
-              )}
-              <li
-                className="text-center relative"
-                ref={dropdownRef}
-                onMouseEnter={() => setIsHovered(true)}
-                onMouseLeave={() => setIsHovered(false)}
-              >
-                <Link
-                  href="/"
-                  className="flex items-center justify-center text-gray-700 hover:text-purple-600 transition-colors py-2 px-4 rounded-md"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  TOOLS <ChevronDown className="ml-8 sm:ml-2 h-4 w-4"  onClick={() => setIsHovered((prev) => !prev)}/>
-                </Link>
-                {isHovered && (
-                  <div className="absolute left-0 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
-                    <div
-                      className="py-1"
-                      role="menu"
-                      aria-orientation="vertical"
-                      aria-labelledby="options-menu"
+                  <li className="text-center">
+                    <Link
+                      href="/wheel-of-life"
+                      className="block text-gray-700 hover:text-purple-600 transition-colors py-2 px-4 rounded-md"
+                      onClick={() => setIsMenuOpen(false)}
                     >
-                      <Link
-                        href="/wheel-of-life"
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-                        role="menuitem"
-                        onClick={() => setIsMenuOpen(false)}
-                      >
-                        Wheel of Life
-                      </Link>
-                      <Link
-                        href="/planner"
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-                        role="menuitem"
-                        onClick={() => setIsMenuOpen(false)}
-                      >
-                        Productivity Planner
-                      </Link>
-                    </div>
-                  </div>
-                )}
-              </li>
+                      WHEEL OF LIFE
+                    </Link>
+                  </li>
+                  <li className="text-center">
+                    <Link
+                      href="/planner"
+                      className="block text-gray-700 hover:text-purple-600 transition-colors py-2 px-4 rounded-md"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      PLANNER
+                    </Link>
+                  </li>          
+                  <li className="text-center">
+                    <Link
+                      href='https://tryumphcoaching.com/'
+                      target="_blank"
+                      className="block text-gray-700 hover:text-purple-600 transition-colors py-2 px-4 rounded-md"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      MAIN SITE
+                    </Link>
+                  </li>
             </ul>
             {user && (
               <div className="lg:ml-4">

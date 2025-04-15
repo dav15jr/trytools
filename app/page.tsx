@@ -74,7 +74,7 @@ export default function HomePage() {
                 <Link href={tool.link} className="mt-auto">
                   <Button
                     variant="outline"
-                    className="w-full text-purple-600 border-purple-600 hover:bg-purple-50 transition-colors"
+                    className="w-full text-purple-600 border-purple-600 hover:bg-purple-500 transition-colors"
                   >
                     Explore {tool.title}
                   </Button>
