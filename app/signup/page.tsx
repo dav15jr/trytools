@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import Error from 'next/error';
 
 export default function SignUpPage() {
   const [email, setEmail] = useState('');
@@ -25,6 +26,23 @@ export default function SignUpPage() {
     }
   }, [user, router, callbackUrl]);
 
+  const handleError = (error: { code: string; message: string }) => {
+    if (error.code === 'auth/wrong-password') {
+      setError('Wrong Password, please try again.');
+    } else if (error.code === 'auth/user-not-found') {
+      setError('Wrong Email or you are not Registered.');
+    } else if (error.code === 'auth/missing-password') {
+      setError('Please Enter your Password.');
+    } else if (error.code === 'auth/invalid-email') {
+      setError('Please Enter your Email.');
+    } else if (error.code === 'auth/weak-password') {
+      setError('Password should be at least 6 characters.');
+    } else if (error.code === 'auth/email-already-in-use') {
+      setError('Account already registered. Please Log In');
+    } 
+    setError(`Error message: ${error.message}`);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (password !== confirmPassword) {
@@ -34,8 +52,8 @@ export default function SignUpPage() {
     try {
       await signUp(email, password);
       router.push(callbackUrl);
-    } catch (error) {
-      setError('Failed to create an account');
+    } catch (error:any) {
+      handleError(error);
     }
   };
 
