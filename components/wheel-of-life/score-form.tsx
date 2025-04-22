@@ -32,9 +32,9 @@ export function ScoreForm({
           />
         </div>
         <div>
-          <Label htmlFor="date">Date</Label>
+          <Label htmlFor="date-field">Date</Label>
           <Input
-            id="date"
+            id="date-field"
             type="date"
             value={date}
             onChange={onDateChange}

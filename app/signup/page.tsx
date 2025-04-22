@@ -80,6 +80,9 @@ export default function SignUpPage() {
               <Input
                 type="email"
                 placeholder="Email"
+                name='email'
+                autoComplete="email"
+                autoFocus
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -89,6 +92,8 @@ export default function SignUpPage() {
               <Input
                 type="password"
                 placeholder="Password"
+                name='password'
+                autoComplete="current-password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
